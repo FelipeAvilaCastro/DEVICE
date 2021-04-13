@@ -1,0 +1,162 @@
+﻿@using DEVICE.Web.ViewModels
+@model EquipoSucursalViewModel
+
+<button id="btnNuevo" class="btn btn-success">Nuevo</button>
+<!-- Modal -->
+<div id="modalAsignacionSucursal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Equipo</label>
+                            @*<input type="text" name="" class="form-control" id="txtEquipo" placeholder="Seleccione el equipo">*@
+                            <select id="cboEquipo" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoProducto)
+                                {
+                                    <option value="@item.Id">@(item.Modelo + " " + item.NumeroSerie)</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDProducto" value="-1" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Sucursal</label>
+                            @*<input type="text" name="" class="form-control" id="txtSucursal" placeholder="Seleccione la sucrusal">*@
+
+                            <select id="cboSucursal" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoSucursal)
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDSucursal" value="-1" />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputCity">Fecha Entrega</label>
+                        <input type="date" class="form-control" id="txtFechaEntrega">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputCity">Comentario</label>
+                        <input type="text" class="form-control" id="txtComentario">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputCity">Adjuntar Firma</label>
+                            <input type="file" class="form-control-file" id="txtFirma" name="firma">
+                        </div>
+
+
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarAsignacion">Save changes</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="divListadoAsignacionSucursal">
+
+</div>
+
+<script>
+    CargarAsignacion()
+    function CargarAsignacion() {
+        //alert(baseUrl);
+        $.ajax({
+            type: "GET",
+            url: "/Equipo/AsignacionSucursal/Listado",
+            cache: false,
+            success: function (dataHtml) {
+                $("#divListadoAsignacionSucursal").html(dataHtml);
+                //$("#divListadoEmpresa #tbEmpresa").DataTable();
+            }
+        });
+    }
+
+
+    $("#btnNuevo").click(function () {
+        $("#modalAsignacionSucursal").modal();
+    });
+
+    $("#btnGuardarAsignacion").click(function () {
+
+        let vIDProducto = $("#hidIDProducto").val();
+        let vIDSucursal = $("#hidIDSucursal").val();
+        let vEquipo = $("#cboEquipo").val();
+        alert(vEquipo);
+        let vSucursal = $("#cboSucursal").val();
+        alert(vSucursal);
+        let vFechaEntrega = $("#txtFechaEntrega").val();
+        /*alert(vFechaEntrega);*/
+        let vComentario = $("#txtComentario").val();
+
+        var dateFechaEntrega = (new Date(vFechaEntrega)).toUTCString();
+
+        let vFirmaUpload = $("#txtFirma").get(0);
+        let files = vFirmaUpload.files;
+        let vData = new FormData();
+
+
+        vData.append('vIDProducto', vIDProducto);
+        vData.append('vIDSucursal', vIDSucursal);
+        vData.append('vFechaEntrega', dateFechaEntrega);
+        vData.append('vComentario', vComentario);
+        vData.append('vEquipo', vEquipo);
+        vData.append('vSucursal', vSucursal);
+
+
+        for (var i = 0; i < files.length; i++) {
+            vData.append(files[i].name, files[i]);
+        }
+
+
+        $.ajax({
+            type: 'POST',
+            url: '/Equipo/AsignacionSucursal/Grabar',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: vData,
+            success: function (exito) {
+                if (exito) {
+                    swal("Good job!", "Se registró satisfactoriamente", "success")
+                    $("#modalAsignacionSucursal").modal("toggle");
+                    LimpiarControles();
+                    CargarAsignacion();
+                } else {
+                    swal("Ocurrió un error en la transacción")
+                }
+            }
+        });
+
+
+
+
+
+
+    });
+
+
+
+
+
+
+
+</script>

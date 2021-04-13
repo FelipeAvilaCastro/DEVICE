@@ -1,0 +1,33 @@
+﻿@using DEVICE.Web.Models
+@model IEnumerable<SucursalProducto>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Sucursal</th>
+            <th>Producto</th>
+            <th>Fecha Entrega</th>
+            <th>Estado</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Sucursal.Descripcion</td>
+                <td>@(item.Producto.Modelo + " " + item.Producto.NumeroSerie)</td>
+                <td>@item.FechaEntrega.Value.ToShortDateString()</td>
+                <td>@(item.Estado==true?"Asignado":"Liberado")</td>
+                <td>
+                    <input type="button" data-id="@item.Id" data-estado="@item.Estado" class="btn btn-success btn CambiarEstado" value="Cambiar Estado" />
+                </td>
+            </tr>
+
+        }
+
+    </tbody>
+
+</table>

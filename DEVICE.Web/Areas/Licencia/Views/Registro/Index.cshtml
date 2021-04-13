@@ -1,0 +1,174 @@
+﻿@using DEVICE.Web.ViewModels
+@model RegistroLicenciaViewModel
+
+<button id="btnNuevo" class="btn btn-success">Nuevo</button>
+<!-- Modal -->
+<div id="modalLicencia" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Licencias</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputEmail4">Software</label>
+                            @*<input type="text" class="form-control" id="txtEquipo" placeholder="Seleccione la persona a asignar">*@
+ 
+                            <select id="cboSoftware" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoSoftware)
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDSoftware" value="-1" />
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="inputPassword4">Modulo</label>
+                            @*<input type="text" class="form-control" id="txtPersona" placeholder="Seleccione la persona a asignar">*@
+                            <select id="cboSoftwareModulo" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoSoftwareModulo)
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDSoftwareModulo" value="-1" />
+
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="inputPassword4">Version</label>
+                            @*<input type="text" class="form-control" id="txtPersona" placeholder="Seleccione la persona a asignar">*@
+                            <select id="cboSoftwareVersion" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoSoftwareVersion)
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDSoftwareVersion" value="-1" />
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Licencia Tarjeta</label>
+                            <input type="text" class="form-control" id="txtLicTarjeta">
+
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Licencia Web</label>
+                            <input type="text" class="form-control" id="txtLicWeb">
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Fecha Vencimiento</label>
+                            <input type="date" class="form-control" id="txtFechaVencimiento">
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="inputCity">Comentario</label>
+                            <input type="text" class="form-control" id="txtComentario">
+                        </div>
+
+                    </div>
+                   
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarLicencia">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="divListadoLicencia">
+
+</div>
+
+<script>
+    CargarProductos()
+    function CargarProductos() {
+        //alert(baseUrl);
+        $.ajax({
+            type: "GET",
+            url: "/Licencia/Registro/Listado",
+            cache: false,
+            success: function (dataHtml) {
+                $("#divListadoLicencia").html(dataHtml);
+            }
+        });
+    }
+
+    $("#btnNuevo").click(function () {
+        $("#modalLicencia").modal();
+    });
+
+
+    $("#btnGuardarLicencia").click(function () {  
+        let vIDSoftware = $("#hidIDSoftware").val();
+        let vSoftwareID = $("#cboSoftware").val();
+        alert(vSoftwareID);
+        let vSoftwareModuloID = $("#cboSoftwareModulo").val();
+        alert(vSoftwareModuloID);
+        let vSoftwareVersionID = $("#cboSoftwareVersion").val();
+        alert(vSoftwareVersionID);
+        let vLicTarjeta = $("#txtLicTarjeta").val();
+        alert(vLicTarjeta);
+        let vLicWeb = $("#txtLicWeb").val();
+        alert(vLicWeb);
+        let vFechaVencimiento = $("#txtFechaVencimiento").val();
+        let vComentario = $("#txtComentario").val();
+       
+        var objLicencia = JSON.stringify({
+            IDSoftware: vIDSoftware,
+            SoftwareID: vSoftwareID,
+            SofwareModuloID: vSoftwareModuloID,
+            SoftwareVersionID: vSoftwareVersionID,
+            NumeroLicenciaTarjeta: vLicTarjeta,
+            NumeroLicenciaWeb: vLicWeb,
+            FechaVencimiento: vFechaVencimiento,
+            Comentario: vComentario
+            
+        });
+        var dataType = 'application/json; charset=utf-8';
+        $.ajax({
+            type: 'POST',
+            url: '/Licencia/Registro/Index',
+            dataType: 'json',
+            contentType: dataType,
+            data: objLicencia,
+            success: function (exito) {
+                if (exito) {
+                    swal("Good job!", "Se registró satisfactoriamente", "success")
+                    /*alert('REgistro exito');*/
+                    //CargarProductos();
+                    //limpiarControles();
+                    //$("#modalRegistroEmpresa").modal("toggle");
+
+                } else {
+                    swal("Ocurrió un error en la transacción")
+                }
+            }
+        });
+    });
+
+
+
+
+</script>

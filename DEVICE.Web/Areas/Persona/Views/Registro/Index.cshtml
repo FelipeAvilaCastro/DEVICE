@@ -1,0 +1,212 @@
+﻿<button id="btnNuevo" class="btn btn-success">Nuevo</button>
+
+<!-- Modal -->
+<div id="modalPersona" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="inputEmail4">Apellido Paterno</label>
+                            <input type="hidden" id="hidIDProducto" value="-1" />
+                            <input type="text" name="" class="form-control" id="txtAppPat" placeholder="Apellido Paterno">
+                            @*<select id="cboEquipo" class="form-control">
+            <option value="-1">--SELECCIONE--</option>
+            @foreach (var item in Model.ListadoProducto)
+            {
+                <option value="@item.Id">@(item.Modelo + " " + item.NumeroSerie)</option>
+            }
+        </select>
+        <input type="hidden" id="hidIDProducto" value="-1" />*@
+                            <input type="hidden" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputPassword4">Apellido Materno</label>
+                            <input type="text" class="form-control" id="txtAppMat" placeholder="Apellido Materno">
+                            <input type="hidden"/>
+
+                        </div>
+                    
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Nombres</label>
+                            <input type="text" class="form-control" id="txtNombres" placeholder="Nombres">
+                            <input type="hidden"/>
+
+                        </div>
+                    
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="inputCity">Usuario</label>
+                            <input type="text" class="form-control" id="txtUsuario">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputCity">Password</label>
+                            <input type="password" class="form-control" id="txtPassword">
+                        </div>
+                    
+                    
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Puesto</label>
+                            <input type="text" class="form-control" id="txtPuesto" name="">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Telefono</label>
+                            <input type="tel" class="form-control" id="txtTelefono" name="">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Correo</label>
+                            <input type="email" class="form-control" id="txtCorreo" name="">
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarPersona">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="divListadoPersona">
+
+</div>
+
+
+<script>
+    CargarPersona()
+    function CargarPersona() {
+        //alert(baseUrl);
+        $.ajax({
+            type: "GET",
+            url: "/Persona/Registro/Listado",
+            cache: false,
+            success: function (dataHtml) {
+                $("#divListadoPersona").html(dataHtml);
+                //$("#divListadoEmpresa #tbEmpresa").DataTable();
+            }
+        });
+    }
+
+    $("#btnNuevo").click(function () {
+        $("#modalPersona").modal();
+    });
+
+
+    $("#btnGuardarPersona").click(function () {
+        let vIDProducto = $("#hidIDProducto").val();
+        let vAppPat = $("#txtAppPat").val();
+        let vAppMat = $("#txtAppMat").val();
+        let vNombres = $("#txtNombres").val();
+        let vUsuario = $("#txtUsuario").val();
+        let vPassword = $("#txtPassword").val();
+        let vPuesto = $("#txtPuesto").val();
+        let vTelefono = $("#txtTelefono").val();
+        let vCorreo = $("#txtCorreo").val();
+
+        var objProducto = JSON.stringify({
+            ID: (vIDProducto == -1 ? 0 : vIDProducto),
+            Paterno: vAppPat,
+            Materno: vAppMat,
+            Nombres: vNombres,
+            Usuario: vUsuario,
+            Password: vPassword,
+            Puesto: vPuesto,
+            Telefono: vTelefono,
+            Correo: vCorreo
+            
+        });
+        var dataType = 'application/json; charset=utf-8';
+        $.ajax({
+            type: 'POST',
+            url: '/Persona/Registro/Index',
+            dataType: 'json',
+            contentType: dataType,
+            data: objProducto,
+            success: function (exito) {
+                if (exito) {
+                    swal("Good job!", "Se registró satisfactoriamente", "success")
+                    /*alert('REgistro exito');*/
+                    CargarPersona();
+                    //limpiarControles();
+                    //$("#modalRegistroEmpresa").modal("toggle");
+                    //limpiarControles();
+                } else {
+                    swal("Ocurrió un error en la transacción")
+                }
+            }
+        });
+    });
+
+
+    $("#divListadoPersona").on('click', '.btnEliminarProducto', function () {
+        let vIdProducto = $(this).attr('data-id');
+        //swal({
+        //    title: "Are you sure?",
+        //    text: "Your will not be able to recover this imaginary file!",
+        //    type: "warning",
+        //    showCancelButton: true,
+        //    confirmButtonClass: "btn-danger",
+        //    confirmButtonText: "Yes, delete it!",
+        //    closeOnConfirm: false
+        //},
+        //    function () {
+        //        swal("Deleted!", "Your imaginary file has been deleted.", "success");
+        //    });
+        $.ajax({
+            type: "POST",
+            url: '/Persona/Registro/Eliminar',
+            data: { id: vIdProducto },
+            cache: false,
+            success: function (exito) {
+                if (exito) {
+                    swal("La Empresa fue eliminada exitosamente.");
+                    CargarPersona();
+                    /*limpiarControles();*/
+                } else {
+                    swal("Ocurrió un error en la transacción");
+                }
+            }
+        });
+    });
+
+
+    $("#divListadoPersona").on('click', '.btnEditarProducto', function () {
+        //LimpiarControles();
+        let vIdProducto = $(this).attr('data-id');
+        $("#hidIDProducto").val(vIdProducto);
+        $.ajax({
+            type: "GET",
+            url: "/Persona/Registro/Obtener",
+            data: { id: vIdProducto },
+            cache: false,
+            success: function (objProducto) {
+                console.log(objProducto);
+                limpiarControles();
+                visualizarCampos(objProducto.tipoProductoId);
+                $("#hidIDProducto").val(objProducto.id);
+                $("#txtPaterno").val(objProducto.Paterno);
+                $("#txtMaterno").val(objProducto.Materno);
+                $("#txtNombres").val(objProducto.Nombres);
+                $("#txtUsuario").val(objProducto.Usuario);
+                $("#txtPassword").val(objProducto.Password);
+                $("#txtPuesto").val(objProducto.Puesto);
+                $("#txtTelefono").val(objProducto.Telefono);
+                $("#txtCorreo").val(objProducto.Correo);
+            }
+        });
+    });
+</script>

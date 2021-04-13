@@ -1,0 +1,247 @@
+﻿@using DEVICE.Web.ViewModels  
+@model EquipoPersonaViewModel
+
+<button id="btnNuevo" class="btn btn-success">Nuevo</button>
+<!-- Modal -->
+<div id="modalAsignacionPersona" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Equipo</label>
+                            @*<input type="text" class="form-control" id="txtEquipo" placeholder="Seleccione la persona a asignar">*@
+
+                            <select id="cboEquipo" class="form-control">
+            <option value="-1">--SELECCIONE--</option>
+            @foreach (var item in Model.ListadoProducto)
+            {
+                <option value="@item.Id">@(item.Modelo + " " + item.NumeroSerie)</option>
+            }
+        </select>
+
+                            <input type="hidden" id="hidIDProducto" value="-1" />
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Persona</label>
+                            @*<input type="text" class="form-control" id="txtPersona" placeholder="Seleccione la persona a asignar">*@
+                        <select id="cboPersona" class="form-control">
+                            <option value="-1">--SELECCIONE--</option>
+                            @foreach (var item in Model.ListadoPersona)
+                            {
+                                <option value="@item.Id">@item.Usuario</option>
+                            }
+                        </select>
+                                <input type="hidden" id="hidIDPersona" value="-1" />
+
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="inputCity">Fecha Entrega</label>
+                            <input type="date" class="form-control" id="txtFechaEntrega" >
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputCity">Fecha Próximo Cambio</label>
+                            <input type="date" class="form-control" id="txtFechaProximoCambio">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="inputCity">Comentario</label>
+                            <input type="text" class="form-control" id="txtComentario">
+                        </div>
+
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputCity">Adjuntar Firma</label>
+                            <input type="file" class="form-control-file" id="txtFirma" name="firma">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputCity">Adjuntar Foto</label>
+                            <input type="file" class="form-control-file" id="txtFoto" name="foto">
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarAsignacion">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="divListadoAsignacionPersona">
+
+</div>
+
+
+<script>
+
+    $("#divListadoAsignacionPersona").on('click', '.btnVerFirma', function () {
+        let vId = $(this).attr('data-id');
+        let vFoto = $(this).attr('data-tipo');
+    });
+
+    $("#divListadoAsignacionPersona").on('click', '.btnCambiarEstado', function () {
+        let vIdAsigPer = $(this).attr('data-id');
+        let vEstado = $(this).attr('data-estado');
+
+
+        swal({
+            title: "Cambio de Estado",
+            text: "Estas Seguro?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Si, deseo cambiar el estado",
+            cancelButtonText: "No, quiero cancelar el estado",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/Equipo/AsignacionPersona/CambiarEstado',
+                        data: { id: vIdAsigPer, estado: vEstado },
+                        cache: false,
+                        success: function (exito) {
+                            if (exito) {
+                                swal("Se actualizo correctamente");
+                                CargarAsignacion();
+
+                            } else {
+                                swal("Ocurrió un error en la transacción");
+                            }
+                        }
+                    });
+
+                } else {
+
+                    swal("Cancelado!", "No se realizo ninguna accion", "warning");
+                }
+
+            });
+
+    });
+
+
+
+
+    function LimpiarControles() {
+
+        $("#cboEquipo").val(-1);
+        $("#cboPersona").val(-1);
+        $("#txtFechaEntrega").val("");
+        $("#txtFechaProximoCambio").val("");
+        $("#txtComentario").val("");
+        $("#txtFirma").val("");
+        $("#txtFoto").val("");
+
+    }
+
+    //$('#txtFechaEntrega').change(function () {
+    //    var date = $(this).val();
+    //    console.log(date, 'change')
+    //    $('#txtFechaProximoCambio').val()
+
+    //});
+
+
+
+
+
+    CargarAsignacion()
+    function CargarAsignacion() {
+        //alert(baseUrl);
+        $.ajax({
+            type: "GET",
+            url: "/Equipo/AsignacionPersona/Listado",
+            cache: false,
+            success: function (dataHtml) {
+                $("#divListadoAsignacionPersona").html(dataHtml);
+               
+            }
+        });
+    }
+
+
+    $("#btnNuevo").click(function () {
+        $("#modalAsignacionPersona").modal();
+    });
+
+
+    $("#btnGuardarAsignacion").click(function () {
+        let vIDProducto = $("#hidIDProducto").val();
+        let vIDPersona = $("#hidIDPersona").val();
+
+        let vEquipo = $("#cboEquipo").val();
+        alert(vEquipo);
+        let vPersona = $("#cboPersona").val();
+        alert(vPersona);
+        let vFechaEntrega = $("#txtFechaEntrega").val();
+        let vFechaProximoCambio = $("#txtFechaProximoCambio").val();
+        let vComentario = $("#txtComentario").val();
+        console.log(vEquipo);
+
+        var dateFechaEntrega = (new Date(vFechaEntrega)).toUTCString();
+        var dateFechaProximoCambio = (new Date(vFechaProximoCambio)).toUTCString();
+
+        let vFirmaUpload = $("#txtFirma").get(0);
+        let vFotoUpload = $("#txtFoto").get(0);
+        let files = vFirmaUpload.files;
+        let files2 = vFotoUpload.files;
+        let vData = new FormData();
+
+        vData.append('vIDProducto', vIDProducto);
+        vData.append('vIDPersona', vIDPersona);
+        vData.append('vEquipo', vEquipo);
+        vData.append('vPersona', vPersona);
+        vData.append('vFechaEntrega', dateFechaEntrega);
+        vData.append('vFechaProximoCambio', dateFechaProximoCambio);
+        vData.append('vComentario', vComentario);
+  
+
+        for (var i = 0; i < files.length; i++) {
+            vData.append(files[i].name, files[i]);
+        }
+        for (var i = 0; i < files2.length; i++) {
+            vData.append(files2[i].name, files2[i]);
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/Equipo/AsignacionPersona/Grabar',
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: vData,
+            success: function (exito) {
+                if (exito) {
+                    swal("Good job!", "Se registró satisfactoriamente", "success")
+                    $("#modalAsignacionPersona").modal("toggle");
+                    LimpiarControles();
+                    CargarAsignacion();
+                } else {
+                    
+                    swal("Ocurrió un error en la transacción")
+                    
+                
+                }
+            }
+        });
+    });
+</script>
