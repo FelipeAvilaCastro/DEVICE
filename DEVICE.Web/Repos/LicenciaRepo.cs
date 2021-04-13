@@ -33,11 +33,35 @@ namespace DEVICE.Web.Repos
                 data.Licencia.Add(licencia);
                 await data.SaveChangesAsync();
             }
+            catch (Exception message)
+            {
+                exito = false;
+            }
+            return exito;
+        }
+
+
+        public static async Task<bool> ActualizarLicencia(Licencia licencia)
+        {
+            bool exito = true;
+            try
+            {
+                using var data = new DeviceDBContext();
+
+                var licenciaActual = data.Licencia.Where(x => x.Id == licencia.Id).FirstOrDefault();
+                licenciaActual.Software = licencia.Software;
+          
+
+
+                await data.SaveChangesAsync();
+            }
             catch
             {
                 exito = false;
             }
             return exito;
+
+
         }
 
 

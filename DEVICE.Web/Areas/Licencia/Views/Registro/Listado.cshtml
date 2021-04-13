@@ -8,8 +8,9 @@
             <th scope="col">Software</th>
             <th scope="col">Modulo</th>
             <th scope="col">Version</th>
-            <th scope="col">Clave Licencia</th>
-            <th scope="col">FEcha Vencimiento</th>
+            <th scope="col">Clave Tarjeta</th>
+            <th scope="col">Clave Web</th>
+            <th scope="col">Fecha Vencimiento</th>
 
             @*<th scope="col">No. Serie</th>
         <th scope="col">Modelo</th>*@
@@ -22,12 +23,15 @@
         {
         <tr>
             <td hidden scope="row">@item.Id</td>
-            <td>@Model.ListadoSoftware.Where(x => x.Id == item.Id).FirstOrDefault().Descripcion</td>
-            <td>@Model.ListadoSoftwareModulo.Where(x => x.Id == item.Id).FirstOrDefault().Descripcion</td>
-            <td>@Model.ListadoSoftwareVersion.Where(x => x.Id == item.Id).FirstOrDefault().Descripcion</td>
-            <td>@Model.ListadoLicencia.Where(x => x.Id == item.Id).FirstOrDefault().NumeroLicenciaWeb</td>
+            <td>@Model.ListadoSoftware.Where(x => x.Id == item.SoftwareId).FirstOrDefault().Descripcion</td>
+            <td>@Model.ListadoSoftwareModulo.Where(x => x.Id == item.SoftwareModuloId).FirstOrDefault().Descripcion</td>
+            <td>@Model.ListadoSoftwareVersion.Where(x => x.Id == item.SoftwareVersionId).FirstOrDefault().Descripcion</td>
+            <td>@item.NumeroLicenciaTarjeta</td>
+            <td>@item.NumeroLicenciaWeb</td>
             <td>@Model.ListadoLicencia.Where(x => x.Id == item.Id).FirstOrDefault().FechaVencimiento</td>
- 
+
+
+
             <td>
                 <button id="btnEliminarProducto"
                         class="btnEliminarProducto btn btn-danger"

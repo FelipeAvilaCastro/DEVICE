@@ -36,15 +36,14 @@ namespace DEVICE.Web.Areas.Licencia.Controllers
         }
 
         [HttpPost]
-
         public async Task<IActionResult> Index([FromBody] Models.Licencia licencia)
         {
             bool exito = true;
             if (licencia.Id <= 0)
                 exito = await LicenciaRepo.RegistrarLicencia(licencia);
             else
-                //exito = await LicenciaRepo.ActualizarProducto(licencia);
-
+                exito = await LicenciaRepo.ActualizarLicencia(licencia);
+           
             if (exito)
                 return Json(exito);
             return RedirectToAction(nameof(Index));
