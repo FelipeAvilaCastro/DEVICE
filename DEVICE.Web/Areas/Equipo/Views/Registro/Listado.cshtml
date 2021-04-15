@@ -1,6 +1,6 @@
 ﻿@model DEVICE.Web.ViewModels.EquipoFabricanteViewModel
 <h5>Listado de Productos</h5>
-<table class="table">
+<table id="tbListadoProductos" class="display" style="width:100%">
     <thead>
         <tr>
             <th hidden scope="col">ID</th>
@@ -43,3 +43,17 @@
         }
     </tbody>
 </table>
+
+<script>
+    loadTable()
+    function loadTable() {
+        var table = $('#tbListadoProductos').DataTable({
+            lengthChange: false,
+            buttons: ['copy', 'excel', 'pdf','csv','print','colvis']
+        });
+
+        table.buttons().container()
+            .insertBefore('#tbListadoProductos_filter');
+
+    }
+</script>

@@ -38,12 +38,18 @@ namespace DEVICE.Web.Repos
             return await data.Producto.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public static async Task<bool> RegistrarProducto(Producto producto)
+        public static async Task<string> RegistrarProducto(Producto producto)
         {
-            bool exito = true;
+            string exito = "OK";
+
             try
             {
                 using var data = new DeviceDBContext();
+
+                bool resultado = await ValidarNumeroSerie(producto.NumeroSerie,null);
+                if (resultado)
+                    return "El número de serie ya se encuentra registrado.";
+
                 producto.Estado = true;
                 producto.SistemaOperativoId = (producto.SistemaOperativoId == -1 ? null : producto.SistemaOperativoId);
                 producto.FabricanteId = (producto.FabricanteId == -1 ? null : producto.FabricanteId);
@@ -55,7 +61,7 @@ namespace DEVICE.Web.Repos
             }
             catch
             {
-                exito = false;
+                exito = "ERROR";
             }
             return exito;
         }
@@ -79,12 +85,43 @@ namespace DEVICE.Web.Repos
             return exito;
         }
 
-        public static async Task<bool> ActualizarProducto(Producto producto)
+        public static async Task<bool> ValidarNumeroSerie(string numeroSerie, int? id)
         {
-            bool exito = true;
+            bool existe = false;
             try
             {
                 using var data = new DeviceDBContext();
+                if (id != null)
+                {
+                    var producto = await data.Producto.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    existe = producto.NumeroSerie == numeroSerie ? false : true;
+
+                    existe = await data.Producto.AnyAsync(x => x.NumeroSerie == numeroSerie
+                            && x.Id != id) ? true : false;
+                    return existe;
+
+                }
+
+                existe = await data.Producto.AnyAsync(x => x.NumeroSerie == numeroSerie 
+                && x.Id!=id) ? true : false;            
+
+            }
+            catch
+            {
+                existe = false;
+            }
+            return existe;
+        }
+
+        public static async Task<string> ActualizarProducto(Producto producto)
+        {
+            string exito = "OK";
+            try
+            {
+                using var data = new DeviceDBContext();
+                bool resultado = await ValidarNumeroSerie(producto.NumeroSerie, producto.Id);
+                if (resultado)
+                    return "El número de serie ya se encuentra registrado.";
 
                 var productoActual = data.Producto.Where(x => x.Id == producto.Id).FirstOrDefault();
                 productoActual.Comentario = producto.Comentario;
@@ -108,10 +145,13 @@ namespace DEVICE.Web.Repos
             }
             catch
             {
-                exito = false;
+                exito = "ERROR";
             }
             return exito;
         }
+
+
+
 
 
     }

@@ -1,7 +1,13 @@
-﻿@using DEVICE.Web.ViewModels  
+﻿@using DEVICE.Web.ViewModels
 @model EquipoPersonaViewModel
 
-<button id="btnNuevo" class="btn btn-success">Nuevo</button>
+<div>
+    <button id="btnNuevo" class="btn btn-success">Nuevo</button>
+</div>
+
+
+
+<br />
 <!-- Modal -->
 <div id="modalAsignacionPersona" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -20,12 +26,12 @@
                             @*<input type="text" class="form-control" id="txtEquipo" placeholder="Seleccione la persona a asignar">*@
 
                             <select id="cboEquipo" class="form-control">
-            <option value="-1">--SELECCIONE--</option>
-            @foreach (var item in Model.ListadoProducto)
-            {
-                <option value="@item.Id">@(item.Modelo + " " + item.NumeroSerie)</option>
-            }
-        </select>
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoProducto)
+                                {
+                                    <option value="@item.Id">@(item.Modelo + " " + item.NumeroSerie)</option>
+                                }
+                            </select>
 
                             <input type="hidden" id="hidIDProducto" value="-1" />
                         </div>
@@ -33,14 +39,14 @@
                         <div class="form-group col-md-6">
                             <label for="inputPassword4">Persona</label>
                             @*<input type="text" class="form-control" id="txtPersona" placeholder="Seleccione la persona a asignar">*@
-                        <select id="cboPersona" class="form-control">
-                            <option value="-1">--SELECCIONE--</option>
-                            @foreach (var item in Model.ListadoPersona)
-                            {
-                                <option value="@item.Id">@item.Usuario</option>
-                            }
-                        </select>
-                                <input type="hidden" id="hidIDPersona" value="-1" />
+                            <select id="cboPersona" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoPersona)
+                                {
+                                    <option value="@item.Id">@item.Usuario</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDPersona" value="-1" />
 
                         </div>
                     </div>
@@ -48,7 +54,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-3">
                             <label for="inputCity">Fecha Entrega</label>
-                            <input type="date" class="form-control" id="txtFechaEntrega" >
+                            <input type="date" class="form-control" id="txtFechaEntrega">
                         </div>
                         <div class="form-group col-md-3">
                             <label for="inputCity">Fecha Próximo Cambio</label>
@@ -89,6 +95,20 @@
 
 
 <script>
+    $("#btnExportar").click(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Equipo/AsignacionPersona/Reporte",
+            cache: false,
+            success: function (dataHtml) {
+                $("#divListadoAsignacionPersona").html(dataHtml);
+
+            }
+        });
+    });
+
+
+
 
     $("#divListadoAsignacionPersona").on('click', '.btnVerFirma', function () {
         let vId = $(this).attr('data-id');
@@ -173,7 +193,7 @@
             cache: false,
             success: function (dataHtml) {
                 $("#divListadoAsignacionPersona").html(dataHtml);
-               
+
             }
         });
     }
@@ -213,7 +233,7 @@
         vData.append('vFechaEntrega', dateFechaEntrega);
         vData.append('vFechaProximoCambio', dateFechaProximoCambio);
         vData.append('vComentario', vComentario);
-  
+
 
         for (var i = 0; i < files.length; i++) {
             vData.append(files[i].name, files[i]);
@@ -236,12 +256,15 @@
                     LimpiarControles();
                     CargarAsignacion();
                 } else {
-                    
+
                     swal("Ocurrió un error en la transacción")
-                    
-                
+
+
                 }
             }
         });
     });
+     
+
+
 </script>
