@@ -114,9 +114,9 @@ namespace DEVICE.Web.Models
 
                 entity.Property(e => e.SoftwareId).HasColumnName("SoftwareID");
 
-                entity.Property(e => e.SoftwareId).HasColumnName("SoftwareModuloID");
+                entity.Property(e => e.SoftwareModuloId).HasColumnName("SoftwareModuloID");
 
-                entity.Property(e => e.SoftwareId).HasColumnName("SoftwareVersionID");
+                entity.Property(e => e.SoftwareVersionId).HasColumnName("SoftwareVersionID");
 
                 entity.Property(e => e.FechaVencimiento).HasColumnType("date");
 

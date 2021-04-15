@@ -123,22 +123,22 @@
     $("#btnGuardarLicencia").click(function () {  
         let vIDSoftware = $("#hidIDSoftware").val();
         let vSoftwareID = $("#cboSoftware").val();
-        alert(vSoftwareID);
+
         let vSoftwareModuloID = $("#cboSoftwareModulo").val();
         alert(vSoftwareModuloID);
         let vSoftwareVersionID = $("#cboSoftwareVersion").val();
-        alert(vSoftwareVersionID);
+
         let vLicTarjeta = $("#txtLicTarjeta").val();
-        alert(vLicTarjeta);
+
         let vLicWeb = $("#txtLicWeb").val();
-        alert(vLicWeb);
+
         let vFechaVencimiento = $("#txtFechaVencimiento").val();
         let vComentario = $("#txtComentario").val();
        
         var objLicencia = JSON.stringify({
             IDSoftware: vIDSoftware,
             SoftwareID: vSoftwareID,
-            SofwareModuloID: vSoftwareModuloID,
+            SoftwareModuloID: vSoftwareModuloID,
             SoftwareVersionID: vSoftwareVersionID,
             NumeroLicenciaTarjeta: vLicTarjeta,
             NumeroLicenciaWeb: vLicWeb,
@@ -159,7 +159,7 @@
                     /*alert('REgistro exito');*/
                     //CargarProductos();
                     //limpiarControles();
-                    //$("#modalRegistroEmpresa").modal("toggle");
+                    $("#modalLicencia").modal("toggle");
 
                 } else {
                     swal("Ocurrió un error en la transacción")
