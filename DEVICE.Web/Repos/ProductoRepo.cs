@@ -29,7 +29,7 @@ namespace DEVICE.Web.Repos
         public static async Task<IEnumerable<Producto>> ObtenerProducto()
         {
             using var data = new DeviceDBContext();
-            return await data.Producto.Where(x => x.Estado == true).ToListAsync();
+            return await data.Producto.Where(x => x.Estado == "AC").ToListAsync();
         }
 
         public static async Task<Producto> ObtenerProductoPorID(int id)
@@ -50,7 +50,7 @@ namespace DEVICE.Web.Repos
                 if (resultado)
                     return "El número de serie ya se encuentra registrado.";
 
-                producto.Estado = true;
+                producto.Estado = "AC";
                 producto.SistemaOperativoId = (producto.SistemaOperativoId == -1 ? null : producto.SistemaOperativoId);
                 producto.FabricanteId = (producto.FabricanteId == -1 ? null : producto.FabricanteId);
                 producto.ProcesadorId = (producto.ProcesadorId == -1 ? null : producto.ProcesadorId);
@@ -75,7 +75,7 @@ namespace DEVICE.Web.Repos
 
                 var producto = data.Producto.Where(x => x.Id == id).FirstOrDefault();
                 //data.Remove(producto);
-                producto.Estado = false;
+                producto.Estado = "IN";
                 await data.SaveChangesAsync();
             }
             catch
