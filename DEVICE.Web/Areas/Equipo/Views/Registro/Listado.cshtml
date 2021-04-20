@@ -45,19 +45,15 @@
 </table>
 
 <script>
-
     loadTable()
-
     function loadTable() {
-
         var table = $('#tbListadoProductos').DataTable({
             lengthChange: false,
-            buttons:['copy','excel','pdf','colvis']
+            buttons: ['copy', 'excel', 'pdf','csv','print','colvis']
         });
 
         table.buttons().container()
             .insertBefore('#tbListadoProductos_filter');
 
     }
-
 </script>

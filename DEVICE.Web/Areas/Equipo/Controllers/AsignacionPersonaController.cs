@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DEVICE.Web.Areas.Equipo.Controllers
@@ -22,6 +23,22 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
             _env = env;
         }
 
+
+        public async Task<IActionResult> Reporte()
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("Usuario,Producto,FechaEntrega,FechaCambio,Estado");
+            var listado = await PersonaProductoRepo.ObtenerPersonaProducto();
+            foreach (var item in listado)
+            {
+                builder.AppendLine($"{item.Persona.Nombres + " " + item.Persona.Paterno}," +
+                    $"{item.Producto.Modelo + " " + item.Producto.NumeroSerie},{item.FechaEntrega}," +
+                    $"{item.FechaProximaCambio},{item.Estado}");
+            }
+            return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "AsignacionPersona.csv");
+        }
+
+      
 
         public async Task<IActionResult> Index()
         {
@@ -148,6 +165,10 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
             var exito = await PersonaProductoRepo.CambiarEstado(id, !estado);
             return Json(exito);
 
+        }
+
+        public IActionResult PruebaDT() {
+            return View();
         }
     }
 }
