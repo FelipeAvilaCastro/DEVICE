@@ -35,15 +35,15 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
         [HttpPost]
         public async Task<IActionResult> Index([FromBody] Producto producto)
         {
-            bool exito = true;
+            string exito = String.Empty;
             if (producto.Id <= 0)
                 exito = await ProductoRepo.RegistrarProducto(producto);
             else
                 exito = await ProductoRepo.ActualizarProducto(producto);
 
-            if (exito)
+
                 return Json(exito);
-            return RedirectToAction(nameof(Index));
+
         }
 
         public async Task<IActionResult> Listado()
