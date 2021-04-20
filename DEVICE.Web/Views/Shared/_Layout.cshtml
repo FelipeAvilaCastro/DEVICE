@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - JobBoard.Web</title>
+    <title>@ViewData["Title"] Device.Web</title>
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -12,9 +12,15 @@
     <link href="~/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
           rel="stylesheet">
+
     <script src="~/lib/bootstrap-sweetalert/sweetalert.js"></script>
     <link href="~/lib/bootstrap-sweetalert/sweetalert.css" rel="stylesheet" />
     <script src="//cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.js"></script>
+
+    <link href="~/lib/datatables.net/datatables.css" rel="stylesheet" />
+    <script src="~/lib/datatables.net/jquery.dataTables.js"></script>
+
+
     <script type="text/javascript">
         let baseUrl = "@Url.Content("~")";
     </script>
@@ -83,7 +89,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Gestión:</h6>
                         <a class="collapse-item" asp-area="Equipo" asp-controller="Registro" asp-action="Index">Registro</a>
-                        <a class="collapse-item" asp-area="Equipo" asp-controller="AsignacionPersona" asp-action="Index">Asig. Persona</a>
+                        <a class="collapse-item" asp-area="Equipo" asp-controller="AsignacionPersona" asp-action="Index">Asig. Usuario</a>
                         <a class="collapse-item" asp-area="Equipo" asp-controller="AsignacionSucursal" asp-action="Index">Asig. Sucursal</a>
                         <a class="collapse-item" href="cards.html">Asig. Licencia</a>
                     </div>
@@ -97,7 +103,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16">
                         <path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019l.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11l.471.242z" />
                     </svg>
-                    <span>Personas</span>
+                    <span>Usuarios</span>
                 </a>
                 <div id="collapsePerson" class="collapse" aria-labelledby="headingUtilities"
                      data-parent="#accordionSidebar">

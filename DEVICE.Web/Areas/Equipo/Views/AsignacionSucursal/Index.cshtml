@@ -7,7 +7,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Asignacion Sucursal</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -17,7 +17,6 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Equipo</label>
-                            @*<input type="text" name="" class="form-control" id="txtEquipo" placeholder="Seleccione el equipo">*@
                             <select id="cboEquipo" class="form-control">
                                 <option value="-1">--SELECCIONE--</option>
                                 @foreach (var item in Model.ListadoProducto)
@@ -63,10 +62,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btnGuardarAsignacion">Save changes</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarAsignacionSuc">Save changes</button>
             </div>
-
-
         </div>
     </div>
 </div>
@@ -76,6 +73,20 @@
 </div>
 
 <script>
+
+    function LimpiarControles() {
+
+        $("#cboEquipo").val(-1);
+        $("#cboPersona").val(-1);
+        $("#txtFechaEntrega").val("");
+        $("#txtFechaProximoCambio").val("");
+        $("#txtComentario").val("");
+        $("#txtFirma").val("");
+        $("#txtFoto").val("");
+
+    }
+
+
     CargarAsignacion()
     function CargarAsignacion() {
         //alert(baseUrl);
@@ -95,16 +106,20 @@
         $("#modalAsignacionSucursal").modal();
     });
 
-    $("#btnGuardarAsignacion").click(function () {
 
+
+    $("#btnGuardarAsignacionSuc").click(function () {
         let vIDProducto = $("#hidIDProducto").val();
+        alert(vIDProducto);
         let vIDSucursal = $("#hidIDSucursal").val();
+        alert(vIDSucursal);
+
         let vEquipo = $("#cboEquipo").val();
         alert(vEquipo);
         let vSucursal = $("#cboSucursal").val();
         alert(vSucursal);
+
         let vFechaEntrega = $("#txtFechaEntrega").val();
-        /*alert(vFechaEntrega);*/
         let vComentario = $("#txtComentario").val();
 
         var dateFechaEntrega = (new Date(vFechaEntrega)).toUTCString();
@@ -113,13 +128,13 @@
         let files = vFirmaUpload.files;
         let vData = new FormData();
 
-
         vData.append('vIDProducto', vIDProducto);
         vData.append('vIDSucursal', vIDSucursal);
-        vData.append('vFechaEntrega', dateFechaEntrega);
-        vData.append('vComentario', vComentario);
         vData.append('vEquipo', vEquipo);
         vData.append('vSucursal', vSucursal);
+        vData.append('vFechaEntrega', dateFechaEntrega);
+        vData.append('vComentario', vComentario);
+
 
 
         for (var i = 0; i < files.length; i++) {
@@ -141,7 +156,8 @@
                     LimpiarControles();
                     CargarAsignacion();
                 } else {
-                    swal("Ocurrió un error en la transacción")
+                    swal("Ocurrió un error en la transacción" )
+
                 }
             }
         });

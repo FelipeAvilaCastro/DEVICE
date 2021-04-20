@@ -23,7 +23,6 @@ namespace DEVICE.Web.Repos
         }
 
 
-
         public static async Task<bool> RegistrarLicencia(Licencia licencia)
         {
             bool exito = true;

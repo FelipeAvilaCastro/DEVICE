@@ -4,7 +4,7 @@
 <link href="~/lib/datatables.net/datatables.css" rel="stylesheet" />
 <script src="~/lib/datatables.net/jquery.dataTables.js"></script>
 
-<table id="tbPersonaProducto" class="table table-bordered">
+<table id="tbPersonaProducto" class="display" style="width:100%">
     <thead>
         <tr>
             <th>Usuario</th>
@@ -64,5 +64,19 @@
 </table>
 
 <script>
-    $("#tbPersonaProducto").DataTable();
+
+    loadTable()
+
+    function loadTable() {
+
+        var table = $('#tbPersonaProducto').DataTable({
+            lengthChange: false,
+            buttons:['copy','excel','pdf','colvis']
+        });
+
+        table.buttons().container()
+            .insertBefore('#tbPersonaProducto_filter');
+
+    }
+   
 </script>

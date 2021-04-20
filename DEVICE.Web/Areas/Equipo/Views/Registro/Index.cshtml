@@ -3,161 +3,190 @@
     ViewData["Title"] = "Registro de Equipos";
 }
 
-<br />
-<form id="frmEquipo" asp-area="Equipo" asp-controller="Registro" asp-action="Index" method="post">
-    <div class="form-row">
-        <div class="form-group col-md-2">
-            <label for="inputPassword4">Tipo</label>
-            <select name="TipoProductoID" id="cboTipoProducto" class="form-control">
-                <option selected value="-1">---SELECCIONE---</option>
-                @foreach (var item in Model.ListadoTipoProducto)
-                {
-                    <option value="@item.Id">@item.Descripcion</option>
-                }
-            </select>
-        </div>
+<div>
+    <button id="btnNuevo" class="btn btn-success"> Nuevo </button>
 
-        <div class="form-group col-md-5" id="divNumeroSerie">
-            <label for="inputEmail4">N° Serie</label>
-            <input type="text" name="NumeroSerie" class="form-control" id="txtNroSerie" placeholder="Ingrese el número de serie">
-        </div>
-        <div class="form-group col-md-5" id="divNumeroProducto" style="display:inline">
-            <label for="inputEmail4">N° Producto</label>
-            <input type="text" name="NumeroProducto" class="form-control" id="txtNroProducto" placeholder="Ingrese el número de producto">
-        </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalregistroProducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Registro de Dispositivos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <label for="inputPassword4">Tipo</label>
+                        <select name="TipoProductoID" id="cboTipoProducto" class="form-control">
+                            <option selected value="-1">---SELECCIONE---</option>
+                            @foreach (var item in Model.ListadoTipoProducto)
+                            {
+                                <option value="@item.Id">@item.Descripcion</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-5" id="divNumeroSerie">
+                        <label for="inputEmail4">N° Serie</label>
+                        <input type="text" name="NumeroSerie" class="form-control" id="txtNroSerie" placeholder="Ingrese el número de serie">
+                    </div>
+                    <div class="form-group col-md-5" id="divNumeroProducto" style="display:inline">
+                        <label for="inputEmail4">N° Producto</label>
+                        <input type="text" name="NumeroProducto" class="form-control" id="txtNroProducto" placeholder="Ingrese el número de producto">
+                    </div>
 
 
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-9" id="divModeloSistema">
+                        <label for="inputEmail4">Modelo</label>
+                        <input type="text" name="Modelo" class="form-control" id="txtModeloSistema" placeholder="Ingrese el Modelo">
+                    </div>
+                </div>
+
+
+
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="inputEmail4">Fabricante</label>
+                        <select name="FabricanteID" id="cboFabricante" class="form-control">
+                            <option selected value="-1">---SELECCIONE---</option>
+                            @foreach (var item in Model.ListadoFabricante)
+                            {
+                                <option value="@item.Id">@item.Descripcion</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4" id="divSistemaOperativo">
+                        <label for="inputEmail4">Sistema Operativo</label>
+                        <select name="SistemaOperativoID" id="cboSistemaOperativo" class="form-control">
+                            <option selected value="-1">---SELECCIONE---</option>
+                            @foreach (var item in Model.ListadoSistemaOperativo)
+                            {
+                                <option value="@item.Id">@item.Descripcion</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4" id="divMemoriaRam">
+                        <label for="inputEmail4">Memoria RAM</label>
+                        <select name="MemoriaRam" id="cboMemoriaRam" class="form-control">
+                            <option selected value="-1">---SELECCIONE---</option>
+                            @for (int i = 4; i <= 32; i += 2)
+                            {
+                                <option value="@i">@(i + "GB")</option>
+                            }
+                        </select>
+                    </div>
+
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4" id="divProcesador">
+                        <label for="inputEmail4">Procesador</label>
+                        <select name="ProcesadorID" id="cboProcesador" class="form-control">
+                            <option selected value="-1">---SELECCIONE---</option>
+                            @foreach (var item in Model.ListadoProcesador)
+                            {
+                                <option value="@item.Id">@item.Descripcion</option>
+                            }
+                        </select>
+
+                    </div>
+                    <div class="form-group col-md-4" id="divProGenVel">
+                        <label for="inputEmail4">Generacion</label>
+                        <select name="ProcesadorGeneracionID" id="cboProcesadorGeneracion" class="form-control">
+                            <option selected value="-1">---SELECCIONE---</option>
+                            @foreach (var item in Model.ListadoProcesadorGeneracion)
+                            {
+                                <option value="@item.Id">@item.Descripcion</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4" id="divProVel">
+                        <label for="inputEmail4">Velocidad</label>
+                        <select name="ProcesadorVelocidadID" id="cboProcesadorVelocidad" class="form-control">
+                            <option selected value="-1">---SELECCIONE---</option>
+                            @foreach (var item in Model.ListadoProcesadorVelocidad)
+                            {
+                                <option value="@item.Id">@item.Descripcion</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+
+
+
+
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="inputEmail4">Comentarios</label>
+                        <input type="hidden" id="hidIDProducto" value="-1" />
+                        <input type="text" name="Comentario" class="form-control" id="txtDescripcion" placeholder="Comentario">
+                        @*<textarea name="Comentario" class="form-control" id="txtDescripcion" cols="40" rows="3"></textarea>*@
+                    </div>
+                </div>
+
+                <div id="divIP" class="form-row" style="display:none">
+                    <div class="form-group col-md-4">
+                        <label for="inputEmail4">IP</label>
+                        <input type="text" name="IP" class="form-control" id="txtIP" placeholder="Ingrese la dirección IP">
+                    </div>
+                </div>
+
+                <div id="divUsePas" class="form-row" style="display:none">
+
+                    <div class="form-group col-md-4">
+                        <label for="inputEmail4">Usuario IP</label>
+                        <input type="text" name="Usuario" class="form-control" id="txtUsuarioIP" placeholder="Ingrese el Usuario IP">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputEmail4">Password IP</label>
+                        <input type="text" name="Password" class="form-control" id="txtPasswordIP" placeholder="Ingrese el Password IP">
+                    </div>
+
+                </div>
+
+                <div id="divSSID" class="form-row" style="display:none">
+                    <div class="form-group col-md-4">
+                        <label for="inputEmail4">SSID Nombre</label>
+                        <input type="text" name="SSIDNombre" class="form-control" id="txtSSIDNombre" placeholder="Ingrese la dirección IP">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputEmail4">SSID Password</label>
+                        <input type="text" name="SSIDPassword" class="form-control" id="txtSSIDPassword" placeholder="Ingrese el Usuario IP">
+                    </div>
+
+
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnGuardar" class="btn btn-success btn-lg mr-5">Guardar</button>
+                <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
     </div>
-    <div class="form-row">
-        <div class="form-group col-md-9" id="divModeloSistema">
-            <label for="inputEmail4">Modelo</label>
-            <input type="text" name="Modelo" class="form-control" id="txtModeloSistema" placeholder="Ingrese el Modelo">
-        </div>
-    </div>
-    
-    
-    
-    
-    <div class="form-row">
-        <div class="form-group col-md-4">
-            <label for="inputEmail4">Fabricante</label>
-            <select name="FabricanteID" id="cboFabricante" class="form-control">
-                <option selected value="-1">---SELECCIONE---</option>
-                @foreach (var item in Model.ListadoFabricante)
-                {
-                    <option value="@item.Id">@item.Descripcion</option>
-                }
-            </select>
-        </div>
-        <div class="form-group col-md-4" id="divSistemaOperativo">
-            <label for="inputEmail4">Sistema Operativo</label>
-            <select name="SistemaOperativoID" id="cboSistemaOperativo" class="form-control">
-                <option selected value="-1">---SELECCIONE---</option>
-                @foreach (var item in Model.ListadoSistemaOperativo)
-                {
-                    <option value="@item.Id">@item.Descripcion</option>
-                }
-            </select>
-        </div>
-        <div class="form-group col-md-4" id="divMemoriaRam">
-            <label for="inputEmail4">Memoria RAM</label>
-            <select name="MemoriaRam" id="cboMemoriaRam" class="form-control">
-                <option selected value="-1">---SELECCIONE---</option>
-                @for (int i = 4; i <= 32; i += 2)
-                {
-                    <option value="@i">@(i + "GB")</option>
-                }
-            </select>
-        </div>
-
-    </div>
-    <div class="form-row">
-        <div  class="form-group col-md-4" id="divProcesador">
-                <label for="inputEmail4">Procesador</label>
-                <select name="ProcesadorID" id="cboProcesador" class="form-control">
-                    <option selected value="-1">---SELECCIONE---</option>
-                    @foreach (var item in Model.ListadoProcesador)
-                    {
-                        <option value="@item.Id">@item.Descripcion</option>
-                    }
-                </select>
-
-        </div>
-        <div class="form-group col-md-4" id="divProGenVel">
-            <label for="inputEmail4">Generacion</label>
-            <select name="ProcesadorGeneracionID" id="cboProcesadorGeneracion" class="form-control">
-                <option selected value="-1">---SELECCIONE---</option>
-                @foreach (var item in Model.ListadoProcesadorGeneracion)
-                {
-                    <option value="@item.Id">@item.Descripcion</option>
-                }
-            </select>
-            </div>
-            <div class="form-group col-md-4" >
-                <label for="inputEmail4">Velocidad</label>
-                <select name="ProcesadorVelocidadID" id="cboProcesadorVelocidad" class="form-control">
-                    <option selected value="-1">---SELECCIONE---</option>
-                    @foreach (var item in Model.ListadoProcesadorVelocidad)
-                    {
-                        <option value="@item.Id">@item.Descripcion</option>
-                    }
-                </select>
-            </div>
-            </div>
+</div>
 
 
 
+@*<form id="frmEquipo" asp-area="Equipo" asp-controller="Registro" asp-action="Index" method="post">*@
 
 
-        
-        <div class="form-row">
-            <div class="form-group col-md-12">
-                <label for="inputEmail4">Comentarios</label>
-                <input type="hidden" id="hidIDProducto" value="-1" />
-                <input type="text" name="Comentario" class="form-control" id="txtDescripcion" placeholder="Comentario">
-                @*<textarea name="Comentario" class="form-control" id="txtDescripcion" cols="40" rows="3"></textarea>*@
-            </div>
-        </div>
+    @*<div class="d-flex justify-content-center">
 
-        <div id="divIP" class="form-row invisible">
-            <div class="form-group col-md-4">
-                <label for="inputEmail4">IP</label>
-                <input type="text" name="IP" class="form-control" id="txtIP" placeholder="Ingrese la dirección IP">
-            </div>
-        </div>
+    </div>*@
 
-        <div id="divUsePas" class="form-row invisible">
-
-            <div class="form-group col-md-4">
-                <label for="inputEmail4">Usuario IP</label>
-                <input type="text" name="Usuario" class="form-control" id="txtUsuarioIP" placeholder="Ingrese el Usuario IP">
-            </div>
-            <div class="form-group col-md-4">
-                <label for="inputEmail4">Password IP</label>
-                <input type="text" name="Password" class="form-control" id="txtPasswordIP" placeholder="Ingrese el Password IP">
-            </div>
-
-        </div>
-
-        <div id="divSSID" class="form-row invisible">
-            <div class="form-group col-md-4">
-                <label for="inputEmail4">SSID Nombre</label>
-                <input type="text" name="SSIDNombre" class="form-control" id="txtSSIDNombre" placeholder="Ingrese la dirección IP">
-            </div>
-            <div class="form-group col-md-4">
-                <label for="inputEmail4">SSID Password</label>
-                <input type="text" name="SSIDPassword" class="form-control" id="txtSSIDPassword" placeholder="Ingrese el Usuario IP">
-            </div>
-
-
-        </div>
-
-        <div class="d-flex justify-content-center">
-            <button type="button" id="btnGuardar" class="btn btn-success btn-lg mr-5">Guardar</button>
-            <button type="reset" class="btn btn-danger btn-sm">Cancelar</button>
-        </div>
-
-</form>
+@*</form>*@
 
 <hr />
 
@@ -168,6 +197,12 @@
 
 
 <script>
+
+    $("#btnNuevo").click(function () {
+        $("#modalregistroProducto").modal();
+    });
+
+
     function limpiarControles() {
         $("#hidIDProducto").val(-1);
         $("#txtDescripcion").val("");
@@ -187,6 +222,8 @@
         $("#txtSSIDNombre").val("");
         $("#txtSSIDPassword").val("");
     }
+
+
     $('#cboTipoProducto').on('change', function () {
         //1	Desktop	True	    1
         //2	Laptop	True	    1
@@ -197,7 +234,7 @@
         //7	TP - Link	True	5
         //8	Handheld	True	6
         //9	Otros	True	6
-      /*  limpiarControles();*/
+        /*  limpiarControles();*/
         let idTipoProducto = $(this).val();
         visualizarCampos(idTipoProducto);
 
@@ -207,94 +244,115 @@
         switch (tipoProducto.toString()) {
             case "1":
             case "2":
-                $('#divIP').addClass('visible').removeClass('invisible');
-                $('#divUsePas').addClass('invisible').removeClass('visible');
-                $('#divSSID').addClass('invisible').removeClass('visible');
-                $('#divNumeroSerie').addClass('visible').removeClass('invisible');
-                $('#divNumeroProducto').addClass('visible').removeClass('invisible');
-                $('#divSistemaOperativo').addClass('visible').removeClass('invisible');
-                $('#divProcesador').addClass('visible').removeClass('invisible');
-                $('#divProGenVel').addClass('visible').removeClass('invisible');
-                $('#divMemoriaRam').addClass('visible').removeClass('invisible');
+                $('#divIP').removeAttr('style');
+                $('#divUsePas').css('display', 'none');
+                $('#divSSID').css('display', 'none');
+                $('#divNumeroSerie').removeAttr('style');
+                $('#divNumeroProducto').removeAttr('style');
+                $('#divSistemaOperativo').removeAttr('style');
+                $('#divProcesador').removeAttr('style');
+                $('#divProGenVel').removeAttr('style');
+                $('#divProVel').removeAttr('style');
+                $('#divMemoriaRam').removeAttr('style');
                 break;
             case "3":
-                $('#divIP').addClass('visible').removeClass('invisible');
-                $('#divUsePas').addClass('visible').removeClass('invisible');
-                $('#divSSID').addClass('invisible').removeClass('visible');
-                $('#divNumeroSerie').addClass('invisible').removeClass('visible');
-                $('#divNumeroProducto').addClass('invisible').removeClass('visible');
-                $('#divSistemaOperativo').addClass('invisible').removeClass('visible');
-                $('#divProcesador').addClass('invisible').removeClass('visible');
-                $('#divProGenVel').addClass('invisible').removeClass('visible');
-                $('#divMemoriaRam').addClass('invisible').removeClass('visible');
+                $('#divIP').removeAttr('style');
+                $('#divUsePas').removeAttr('style');
+                $('#divSSID').css('display', 'none');
+                $('#divNumeroSerie').css('display', 'none');
+                $('#divNumeroProducto').css('display', 'none');
+                $('#divSistemaOperativo').css('display', 'none');
+                $('#divProcesador').css('display', 'none');
+                $('#divProGenVel').css('display', 'none');
+                $('#divProVel').css('display', 'none');
+                $('#divMemoriaRam').css('display', 'none');
                 break;
             case "4":
             case "8":
-                $('#divIP').addClass('visible').removeClass('invisible');
-                $('#divUsePas').addClass('invisible').removeClass('visible');
-                $('#divSSID').addClass('invisible').removeClass('visible');
-                $('#divNumeroSerie').addClass('visible').removeClass('invisible');
-                $('#divNumeroProducto').addClass('invisible').removeClass('visible');
-                $('#divSistemaOperativo').addClass('invisible').removeClass('visible');
-                $('#divProcesador').addClass('invisible').removeClass('visible');
-                $('#divProGenVel').addClass('invisible').removeClass('visible');
-                $('#divMemoriaRam').addClass('invisible').removeClass('visible');
+                $('#divIP').removeAttr('style');
+                $('#divUsePas').css('display', 'none');
+                $('#divSSID').css('display', 'none');
+                $('#divNumeroSerie').removeAttr('style');
+                $('#divNumeroProducto').css('display', 'none');
+                $('#divSistemaOperativo').css('display', 'none');
+                $('#divProcesador').css('display', 'none');
+                $('#divProGenVel').css('display', 'none');
+                $('#divProVel').css('display', 'none');
+                $('#divMemoriaRam').css('display', 'none');
                 break;
             case "5":
-                $('#divIP').addClass('visible').removeClass('invisible');
-                $('#divUsePas').addClass('visible').removeClass('invisible');
-                $('#divSSID').addClass('invisible').removeClass('visible');
-                $('#divNumeroSerie').addClass('visible').removeClass('invisible');
-                $('#divNumeroProducto').addClass('visible').removeClass('invisible');
-                $('#divSistemaOperativo').addClass('visible').removeClass('invisible');
-                $('#divProcesador').addClass('visible').removeClass('invisible');
-                $('#divProGenVel').addClass('visible').removeClass('invisible');
-                $('#divMemoriaRam').addClass('visible').removeClass('invisible');
+                $('#divIP').removeAttr('style');
+                $('#divUsePas').removeAttr('style');
+                $('#divSSID').css('display', 'none');
+                $('#divNumeroSerie').removeAttr('style');
+                $('#divNumeroProducto').removeAttr('style');
+                $('#divSistemaOperativo').removeAttr('style');
+                $('#divProcesador').removeAttr('style');
+                $('#divProGenVel').removeAttr('style');
+                $('#divProVel').css('display', 'none');
+                $('#divMemoriaRam').removeAttr('style');
                 break;
             case "6":
-                $('#divIP').addClass('visible').removeClass('invisible');
-                $('#divUsePas').addClass('visible').removeClass('invisible');
-                $('#divSSID').addClass('invisible').removeClass('visible');
-                $('#divNumeroSerie').addClass('visible').removeClass('invisible');
-                $('#divNumeroProducto').addClass('invisible').removeClass('visible');
-                $('#divSistemaOperativo').addClass('invisible').removeClass('visible');
-                $('#divProcesador').addClass('invisible').removeClass('visible');
-                $('#divProGenVel').addClass('invisible').removeClass('visible');
-                $('#divMemoriaRam').addClass('invisible').removeClass('visible');
+                $('#divIP').removeAttr('style');
+                $('#divUsePas').removeAttr('style');
+                $('#divSSID').css('display', 'none');
+                $('#divNumeroSerie').removeAttr('style');
+                $('#divNumeroProducto').css('display', 'none');
+                $('#divSistemaOperativo').css('display', 'none');
+                $('#divProcesador').css('display', 'none');
+                $('#divProGenVel').css('display', 'none');
+                $('#divProVel').css('display', 'none');
+                $('#divMemoriaRam').css('display', 'none');
                 break;
             case "7":
-                $('#divIP').addClass('visible').removeClass('invisible');
-                $('#divUsePas').addClass('visible').removeClass('invisible');
-                $('#divSSID').addClass('visible').removeClass('invisible');
-                $('#divNumeroSerie').addClass('visible').removeClass('invisible');
-                $('#divNumeroProducto').addClass('invisible').removeClass('visible');
-                $('#divSistemaOperativo').addClass('invisible').removeClass('visible');
-                $('#divProcesador').addClass('invisible').removeClass('visible');
-                $('#divProGenVel').addClass('invisible').removeClass('visible');
-                $('#divMemoriaRam').addClass('invisible').removeClass('visible');
+                //$('#divIP').css('display', 'ruby');
+                //$('#divUsePas').css('display', 'ruby');
+                //$('#divSSID').css('display', 'ruby');
+                //$('#divNumeroSerie').css('display', 'ruby');
+                //$('#divNumeroProducto').addClass('invisible').removeClass('visible');
+                //$('#divSistemaOperativo').addClass('invisible').removeClass('visible');
+                //$('#divProcesador').addClass('invisible').removeClass('visible');
+                //$('#divProGenVel').addClass('invisible').removeClass('visible');
+                //$('#divProVel').addClass('invisible').removeClass('visible');
+                //$('#divMemoriaRam').addClass('invisible').removeClass('visible');
+                //break;
+
+                $('#divIP').css('display', 'ruby');
+                $('#divUsePas').removeAttr('style');
+                $('#divSSID').removeAttr('style');
+                $('#divNumeroSerie').removeAttr('style');
+                $('#divNumeroProducto').css('display', 'none');
+                $('#divSistemaOperativo').css('display', 'none');
+                $('#divProcesador').css('display', 'none');
+                $('#divProGenVel').css('display', 'none');
+                $('#divProVel').css('display', 'none');
+                $('#divMemoriaRam').css('display', 'none');
                 break;
+
             case "9":
             case "10":
-                $('#divIP').addClass('visible').removeClass('invisible');
-                $('#divUsePas').addClass('visible').removeClass('invisible');
-                $('#divSSID').addClass('invisible').removeClass('visible');
-                $('#divNumeroSerie').addClass('visible').removeClass('invisible');
-                $('#divNumeroProducto').addClass('invisible').removeClass('visible');
-                $('#divSistemaOperativo').addClass('invisible').removeClass('visible');
-                $('#divProcesador').addClass('invisible').removeClass('visible');
-                $('#divProGenVel').addClass('invisible').removeClass('visible');
-                $('#divMemoriaRam').addClass('invisible').removeClass('visible');
+                $('#divIP').removeAttr('style');
+                $('#divUsePas').removeAttr('style');
+                $('#divSSID').css('display', 'none');
+                $('#divNumeroSerie').removeAttr('style');
+                $('#divNumeroProducto').css('display', 'none');
+                $('#divSistemaOperativo').css('display', 'none');
+                $('#divProcesador').css('display', 'none');
+                $('#divProGenVel').css('display', 'none');
+                $('#divProVel').css('display', 'none');
+                $('#divMemoriaRam').css('display', 'none');
                 break;
             case "11":
-                $('#divIP').addClass('invisible').removeClass('visible');
-                $('#divUsePas').addClass('invisible').removeClass('visible');
-                $('#divSSID').addClass('invisible').removeClass('visible');
-                $('#divNumeroSerie').addClass('visible').removeClass('invisible');
-                $('#divNumeroProducto').addClass('invisible').removeClass('visible');
-                $('#divSistemaOperativo').addClass('invisible').removeClass('visible');
-                $('#divProcesador').addClass('invisible').removeClass('visible');
-                $('#divProGenVel').addClass('invisible').removeClass('visible');
-                $('#divMemoriaRam').addClass('invisible').removeClass('visible');
+                $('#divIP').css('display', 'none');
+                $('#divUsePas').css('display', 'none');
+                $('#divSSID').css('display', 'none');
+                $('#divNumeroSerie').removeAttr('style');
+                $('#divNumeroProducto').css('display', 'none');
+                $('#divSistemaOperativo').css('display', 'none');
+                $('#divProcesador').css('display', 'none');
+                $('#divProGenVel').css('display', 'none');
+                $('#divProVel').css('display', 'none');
+                $('#divMemoriaRam').css('display', 'none');
                 break;
 
 
@@ -363,15 +421,16 @@
             contentType: dataType,
             data: objProducto,
             success: function (exito) {
-                if (exito) {
-                swal("Good job!", "Se registró satisfactoriamente", "success")
+
+                if (exito=="OK") {
+                    swal("Good job!", "Se registró satisfactoriamente", "success")
                     /*alert('REgistro exito');*/
                     CargarProductos();
                     limpiarControles();
                     //$("#modalRegistroEmpresa").modal("toggle");
                     //limpiarControles();
                 } else {
-                    swal("Ocurrió un error en la transacción")
+                    swal(exito)
                 }
             }
         });
@@ -410,6 +469,7 @@
 
     $("#divListado").on('click', '.btnEditarProducto', function () {
         //LimpiarControles();
+        let modalRegistro = $("#modalregistroProducto");
         let vIdProducto = $(this).attr('data-id');
         $("#hidIDProducto").val(vIdProducto);
         $.ajax({
@@ -431,11 +491,14 @@
                 $("#cboSistemaOperativo").val(objProducto.sistemaOperativoId);
                 $("#cboFabricante").val(objProducto.fabricanteId);
                 $("#cboProcesador").val(objProducto.procesadorId);
+                $("#cboProcesadorGeneracion").val(objProducto.procesadorGeneracionId);
+                $("#cboProcesadorVelocidad").val(objProducto.procesadorVelocidadId);
                 $("#txtIP").val(objProducto.ip);
                 $("#txtUsuarioIP").val(objProducto.usuario);
                 $("#txtPasswordIP").val(objProducto.password);
                 $("#txtSSIDNombre").val(objProducto.ssidNombre);
                 $("#txtSSIDPassword").val(objProducto.ssidPassword);
+                modalRegistro.modal();
             }
         });
     });

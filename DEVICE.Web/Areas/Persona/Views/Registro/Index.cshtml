@@ -15,16 +15,8 @@
                     <div class="form-row">
                         <div class="form-group col-md-3">
                             <label for="inputEmail4">Apellido Paterno</label>
-                            <input type="hidden" id="hidIDProducto" value="-1" />
+                            <input type="hidden" id="hidIDUsuario" value="-1" />
                             <input type="text" name="" class="form-control" id="txtAppPat" placeholder="Apellido Paterno">
-                            @*<select id="cboEquipo" class="form-control">
-            <option value="-1">--SELECCIONE--</option>
-            @foreach (var item in Model.ListadoProducto)
-            {
-                <option value="@item.Id">@(item.Modelo + " " + item.NumeroSerie)</option>
-            }
-        </select>
-        <input type="hidden" id="hidIDProducto" value="-1" />*@
                             <input type="hidden" />
                         </div>
                         <div class="form-group col-md-3">
@@ -46,11 +38,11 @@
                     <div class="form-row">
                         <div class="form-group col-md-3">
                             <label for="inputCity">Usuario</label>
-                            <input type="text" class="form-control" id="txtUsuario">
+                            <input type="text" class="form-control" id="txtUsuario" placeholder="">
                         </div>
                         <div class="form-group col-md-3">
                             <label for="inputCity">Password</label>
-                            <input type="password" class="form-control" id="txtPassword">
+                            <input type="password" class="form-control" id="txtPassword" placeholder="">
                         </div>
                     
                     
@@ -87,6 +79,20 @@
 
 
 <script>
+
+    function limpiarControles() {
+        $("#hidIDUsuario").val(-1);
+        $("#txtAppPat").val("");
+        $("#txtAppMat").val("");
+        $("#txtNombres").val("");
+        $("#txtUsuario").val("");
+        $("#txtPassword").val("");
+        $("#txtPuesto").val("");
+        $("#txtTelefono").val("");
+        $("#txtCorreo").val("");
+
+    }
+
     CargarPersona()
     function CargarPersona() {
         //alert(baseUrl);
@@ -107,7 +113,7 @@
 
 
     $("#btnGuardarPersona").click(function () {
-        let vIDProducto = $("#hidIDProducto").val();
+        let vIDUsuario = $("#hidIDUsuario").val();
         let vAppPat = $("#txtAppPat").val();
         let vAppMat = $("#txtAppMat").val();
         let vNombres = $("#txtNombres").val();
@@ -118,7 +124,7 @@
         let vCorreo = $("#txtCorreo").val();
 
         var objProducto = JSON.stringify({
-            ID: (vIDProducto == -1 ? 0 : vIDProducto),
+            ID: (vIDUsuario == -1 ? 0 : vIDUsuario),
             Paterno: vAppPat,
             Materno: vAppMat,
             Nombres: vNombres,
@@ -138,12 +144,11 @@
             data: objProducto,
             success: function (exito) {
                 if (exito) {
-                    swal("Good job!", "Se registró satisfactoriamente", "success")
-                    /*alert('REgistro exito');*/
+                    swal("Good job!", "El usuario Se registró satisfactoriamente", "success")
                     CargarPersona();
-                    //limpiarControles();
-                    //$("#modalRegistroEmpresa").modal("toggle");
-                    //limpiarControles();
+                    limpiarControles();
+                    $("#modalPersona").modal("toggle");
+
                 } else {
                     swal("Ocurrió un error en la transacción")
                 }

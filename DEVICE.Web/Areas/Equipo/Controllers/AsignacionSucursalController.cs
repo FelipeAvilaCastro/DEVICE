@@ -50,9 +50,8 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
             bool exito = true;
             try
             {
-
-                //int idEquipo = Convert.ToInt32(Request.Form.Where(x => x.Key == "vEquipo").FirstOrDefault().Value);
-                //int idSucursal = Convert.ToInt32(Request.Form.Where(x => x.Key == "vSucursal").FirstOrDefault().Value);
+                int idSucursal = Convert.ToInt32(Request.Form.Where(x => x.Key == "vSucursal").FirstOrDefault().Value);
+                int idEquipo = Convert.ToInt32(Request.Form.Where(x => x.Key == "vEquipo").FirstOrDefault().Value);
 
                 DateTime fechaEntrega = Convert.ToDateTime(Request.Form["vFechaEntrega"]).Date;
                 string comentario = Request.Form.Where(x => x.Key == "vComentario").FirstOrDefault().Value;
@@ -63,8 +62,8 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
 
                 var asignacion = new SucursalProducto()
                 {
-                    //SucursalId = 5,
-                    //ProductoId = 22,
+                    SucursalId = idSucursal,
+                    ProductoId = idEquipo,
                     FechaEntrega = fechaEntrega,
                     Estado = true,
                     Comentario = comentario,
@@ -97,7 +96,7 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
                     exito = await SucursalProductoEvidenciaRepo.RegistrarEvidencia(evidenciaFirma);
 
                 }
-                catch (Exception)
+                catch (Exception message)
                 {
 
                     exito = false;

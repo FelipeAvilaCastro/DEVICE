@@ -230,6 +230,24 @@ namespace DEVICE.Web.Models
                 entity.Property(e => e.Descripcion).HasMaxLength(200);
             });
 
+
+
+            modelBuilder.Entity<ProcesadorGeneracion>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Descripcion).HasMaxLength(200);
+            });
+
+
+            modelBuilder.Entity<ProcesadorVelocidad>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Descripcion).HasMaxLength(200);
+            });
+
+
             modelBuilder.Entity<Producto>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -251,6 +269,10 @@ namespace DEVICE.Web.Models
                 entity.Property(e => e.Password).HasMaxLength(100);
 
                 entity.Property(e => e.ProcesadorId).HasColumnName("ProcesadorID");
+
+                entity.Property(e => e.ProcesadorGeneracionId).HasColumnName("ProcesadorGeneracionID");
+
+                entity.Property(e => e.ProcesadorVelocidadId).HasColumnName("ProcesadorVelocidadID");
 
                 entity.Property(e => e.SistemaOperativoId).HasColumnName("SistemaOperativoID");
 

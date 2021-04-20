@@ -35,23 +35,24 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
         [HttpPost]
         public async Task<IActionResult> Index([FromBody] Producto producto)
         {
-            bool exito = true;
+            //bool exito = true;
+            string exito = String.Empty;
             if (producto.Id <= 0)
                 exito = await ProductoRepo.RegistrarProducto(producto);
             else
                 exito = await ProductoRepo.ActualizarProducto(producto);
 
-            if (exito)
+            //if (exito)
                 return Json(exito);
-            return RedirectToAction(nameof(Index));
+            //return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Listado()
         {
             var listado = new EquipoFabricanteViewModel();
-            listado.ListadoFabricante = await FabricanteRepo.ObtenerFabricante();
             listado.ListadoProducto = await ProductoRepo.ObtenerProducto();
             listado.ListadoTipoProducto = await TipoProductoRepo.ObtenerTipoProducto();
+            listado.ListadoFabricante = await FabricanteRepo.ObtenerFabricante();
             return PartialView(listado);
         }
 

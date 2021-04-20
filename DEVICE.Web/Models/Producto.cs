@@ -27,7 +27,7 @@ namespace DEVICE.Web.Models
         public int? ProcesadorId { get; set; }
         public int? ProcesadorGeneracionId { get; set; }
         public int? ProcesadorVelocidadId { get; set; }
-        public bool? Estado { get; set; }
+        public string Estado { get; set; }
         public string Ip { get; set; }
         public string Usuario { get; set; }
         public string Password { get; set; }
