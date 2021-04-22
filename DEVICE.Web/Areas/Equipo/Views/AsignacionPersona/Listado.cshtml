@@ -21,8 +21,8 @@
         @foreach (var item in Model)
         {
 
-            var nombreFirma = "../../Documents/AsignacionPersona/" + item.PersonaProductoEvidencia.Where(x => x.PersonaProductoId == item.Id && x.Tipo == "S").FirstOrDefault().NombreArchivo;
-            var nombreFoto = "../../Documents/AsignacionPersona/" + item.PersonaProductoEvidencia.Where(x => x.PersonaProductoId == item.Id && x.Tipo == "P").FirstOrDefault().NombreArchivo;
+            var nombreFirma = item.PersonaProductoEvidencia.Where(x => x.PersonaProductoId == item.Id && x.Tipo == "S").FirstOrDefault().NombreArchivo;
+            var nombreFoto = item.PersonaProductoEvidencia.Where(x => x.PersonaProductoId == item.Id && x.Tipo == "P").FirstOrDefault().NombreArchivo;
 
         <tr>
             <td>@(item.Persona.Nombres + " " + item.Persona.Paterno)</td>
@@ -31,7 +31,10 @@
             <td>@item.FechaProximaCambio.Value.ToShortDateString()</td>
             <td>@(item.Estado==true?"Asignado":"Liberado")</td>
             <td>
-                <a data-id="@item.Id" dowload="@nombreFirma" data-tipo="S" class="btn btn-info btnVerFirma"
+                @Html.ActionLink("Firma", "DownloadFile", new { fileName = nombreFirma }, new { @class = "btn btn-success" })
+                @Html.ActionLink("Foto", "DownloadFile", new { fileName = nombreFoto }, new { @class = "btn btn-primary" })
+                
+                @*<a data-id="@item.Id" dowload="@nombreFirma" data-tipo="S" class="btn btn-info btnVerFirma"
                    href="@(nombreFirma)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-files" viewBox="0 0 16 16">
                         <path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z" />
@@ -46,14 +49,12 @@
                         <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z" />
                     </svg>
 
-                    </a>
-
-
-                    <button data-id="@item.Id" data-estado="@item.Estado" class="btn btn-success btnCambiarEstado" title="Cambiar Estado">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z" />
-                        </svg>
-                    </button>
+                </a>*@
+                <button data-id="@item.Id" data-estado="@item.Estado" class="btn btn-success btnCambiarEstado" title="Cambiar Estado">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z" />
+                    </svg>
+                </button>
             </td>
         </tr>
 

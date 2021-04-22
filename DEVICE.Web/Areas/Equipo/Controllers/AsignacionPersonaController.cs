@@ -170,6 +170,18 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
         public IActionResult PruebaDT() {
             return View();
         }
+
+        public FileResult DownloadFile(string fileName)
+        {
+            //Build the File Path.
+            string path = Path.Combine(this._env.ContentRootPath, "Documents/AsignacionPersona/") + fileName;
+
+            //Read the File data into Byte Array.
+            byte[] bytes = System.IO.File.ReadAllBytes(path);
+
+            //Send the File to Download.
+            return File(bytes, "application/octet-stream", fileName);
+        }
     }
 }
 
