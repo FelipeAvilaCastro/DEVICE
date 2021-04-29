@@ -77,8 +77,8 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
                 var fileFoto = Request.Form.Files.Count == 0 ? null : Request.Form.Files[1];
 
 
-                string fileNameFirma = Guid.NewGuid().ToString() + Path.GetExtension(fileFirma.FileName).ToLowerInvariant();
-                string fileNameFoto = DateTime.Now.ToFileTime().ToString() + Path.GetExtension(fileFoto.FileName).ToLowerInvariant();
+                string fileNameFirma = fileFirma==null?"": Guid.NewGuid().ToString() + Path.GetExtension(fileFirma.FileName).ToLowerInvariant();
+                string fileNameFoto = fileFoto == null ? "" : DateTime.Now.ToFileTime().ToString() + Path.GetExtension(fileFoto.FileName).ToLowerInvariant();
 
                 var asignacion = new PersonaProducto()
                 {
@@ -111,9 +111,10 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
 
                         using var stream = System.IO.File.Create(filePath);
                         await fileFirma.CopyToAsync(stream);
+                        exito = await PersonaProductoEvidenciaRepo.RegistrarEvidencia(evidenciaFirma);
+
                     }
 
-                    exito = await PersonaProductoEvidenciaRepo.RegistrarEvidencia(evidenciaFirma);
                 }
                 catch (Exception)
                 {
@@ -137,9 +138,10 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
 
                         using var stream = System.IO.File.Create(filePath);
                         await fileFoto.CopyToAsync(stream);
+                        exito = await PersonaProductoEvidenciaRepo.RegistrarEvidencia(evidenciaFoto);
+
                     }
 
-                    exito = await PersonaProductoEvidenciaRepo.RegistrarEvidencia(evidenciaFoto);
                 }
                 catch (Exception)
                 {
@@ -167,8 +169,10 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
 
         }
 
-        public IActionResult PruebaDT() {
-            return View();
+        public async Task<IActionResult> Obtener(int id)
+        {
+            var producto = await PersonaProductoRepo.ObtenerPersonaProductoPorID(id);
+            return Json(producto);
         }
 
         public FileResult DownloadFile(string fileName)

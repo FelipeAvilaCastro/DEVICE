@@ -9,6 +9,10 @@
     {
       "library": "datatables.net@1.10.24",
       "destination": "wwwroot/lib/datatables.net/"
+    },
+    {
+      "library": "moment.js@2.29.1",
+      "destination": "wwwroot/lib/moment.js/"
     }
   ]
 }

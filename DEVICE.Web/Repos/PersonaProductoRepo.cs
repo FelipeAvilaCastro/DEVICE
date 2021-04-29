@@ -19,7 +19,7 @@ namespace DEVICE.Web.Repos
         public static async Task<PersonaProducto> ObtenerPersonaProductoPorID(int id)
         {
             using var data = new DeviceDBContext();
-            return await data.PersonaProducto.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await data.PersonaProducto.Include("Persona").Include("Producto").Include("PersonaProductoEvidencia").Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         public static async Task<bool> RegistrarPersonaProducto(PersonaProducto personaProducto)

@@ -1,4 +1,5 @@
 ﻿using DEVICE.Web.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,14 @@ namespace DEVICE.Web.Repos
             using var data = new DeviceDBContext();
             var evidencia = data.PersonaProductoEvidencia
                 .Where(x => x.Id == id && x.Tipo==tipo).FirstOrDefault().NombreArchivo;
+            return evidencia;
+        }
+
+        public static async Task<IEnumerable<PersonaProductoEvidencia>> ObtenerEvidencia(int idPersonaProducto)
+        {
+            using var data = new DeviceDBContext();
+            var evidencia = await data.PersonaProductoEvidencia
+                .Where(x => x.PersonaProductoId== idPersonaProducto).ToListAsync();
             return evidencia;
         }
 

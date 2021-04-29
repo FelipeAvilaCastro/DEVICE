@@ -1,4 +1,4 @@
-﻿@using DEVICE.Web.ViewModels  
+﻿@using DEVICE.Web.ViewModels
 @model EquipoPersonaViewModel
 
 <button id="btnNuevo" class="btn btn-success">Nuevo</button>
@@ -20,26 +20,26 @@
                             @*<input type="text" class="form-control" id="txtEquipo" placeholder="Seleccione la persona a asignar">*@
 
                             <select id="cboEquipo" class="form-control">
-            <option value="-1">--SELECCIONE--</option>
-            @foreach (var item in Model.ListadoProducto)
-            {
-                <option value="@item.Id">@(item.Modelo + " " + item.NumeroSerie)</option>
-            }
-        </select>
-                        <input type="hidden" id="hidIDProducto" value="-1" />
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoProducto)
+                                {
+                                    <option value="@item.Id">@(item.Modelo + " " + item.NumeroSerie)</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDProducto" value="-1" />
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="inputPassword4">Persona</label>
                             @*<input type="text" class="form-control" id="txtPersona" placeholder="Seleccione la persona a asignar">*@
-                        <select id="cboPersona" class="form-control">
-                            <option value="-1">--SELECCIONE--</option>
-                            @foreach (var item in Model.ListadoPersona)
-                            {
-                                <option value="@item.Id">@item.Usuario</option>
-                            }
-                        </select>
-                                <input type="hidden" id="hidIDPersona" value="-1" />
+                            <select id="cboPersona" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoPersona)
+                                {
+                                    <option value="@item.Id">@item.Usuario</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDAsignacionPersona" value="-1" />
 
                         </div>
                     </div>
@@ -47,7 +47,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-3">
                             <label for="inputCity">Fecha Entrega</label>
-                            <input type="date" class="form-control" id="txtFechaEntrega" >
+                            <input type="date" class="form-control" id="txtFechaEntrega">
                         </div>
                         <div class="form-group col-md-3">
                             <label for="inputCity">Fecha Próximo Cambio</label>
@@ -85,9 +85,73 @@
 <div id="divListadoAsignacionPersona">
 
 </div>
-
+<script src="~/lib/moment.js/moment.js"></script>
 
 <script>
+
+    $("#divListadoAsignacionPersona").on('click', '.btnEditarAsignacionEquipo', function () {
+        let vId = $(this).attr('data-id');
+        let vFoto = $(this).attr('data-tipo');
+
+        let vModal = $("#modalAsignacionPersona");
+
+        $("#hidIDAsignacionPersona").val(vId);
+
+        $.ajax({
+            type: "GET",
+            url: "/Equipo/AsignacionPersona/Obtener",
+            data: { id: vId },
+            cache: false,
+            success: function (objPersona) {
+                console.log(objPersona);
+                LimpiarControles();
+                $("#hidIDAsignacionPersona").val(objPersona.Id);
+
+                $("#cboEquipo").val(objPersona.productoId);
+                $("#cboPersona").val(objPersona.personaId);
+
+                let fechaProx = moment(objPersona.fechaEntrega).format('YYYY-MM-DD');
+                let fechaProxCambio = moment(objPersona.fechaProximoCambio).format('YYYY-MM-DD');
+                document.getElementById("txtFechaEntrega").value = fechaProx;
+                document.getElementById("txtFechaProximoCambio").value = fechaProxCambio;
+
+                $("#txtComentario").val(objPersona.comentario);
+
+                if (objPersona.personaProductoEvidencia.length > 0) {
+                    console.log("entro if");
+
+                    //let obj = jQuery.parseJSON(objPersona.personaProductoEvidencia);
+                    $.each(objPersona.personaProductoEvidencia, function (i, item) {
+                        console.log("item: " + item.tipo);
+                        console.log("nombreArchivo: " + item.nombreArchivo);
+                        console.log("i: " + i);
+                        if (item.tipo == "S") {
+                            alert("IF ---> S");
+                            //$("#txtFirma").val(item.nombreArchivo);
+                        }
+                        //if (item.tipo == "P") {
+                        //    $("#txtFoto").val("ASDAS");
+                        //    alert("IF ---> P");
+                        //}
+
+                        //console.log("EACH.. " + objPersona.personaProductoEvidencia[i].tipo);
+                        //if (objPersona.personaProductoEvidencia[i].tipo == "S") {
+                        //    console.log("ES S");
+                        //    $("#txtFirma").val(objPersona.personaProductoEvidencia[i].nombreArchivo);
+                        //} else {
+                        //    console.log("ES P");
+                        //    $("#txtFoto").val(objPersona.personaProductoEvidencia[i].nombreArchivo);
+                        //}
+                    });
+                                                          
+                }
+                vModal.modal();            }
+        });
+
+
+
+    });
+
 
     $("#divListadoAsignacionPersona").on('click', '.btnVerFirma', function () {
         let vId = $(this).attr('data-id');
@@ -172,7 +236,7 @@
             cache: false,
             success: function (dataHtml) {
                 $("#divListadoAsignacionPersona").html(dataHtml);
-               
+
             }
         });
     }
@@ -211,7 +275,7 @@
         vData.append('vFechaEntrega', dateFechaEntrega);
         vData.append('vFechaProximoCambio', dateFechaProximoCambio);
         vData.append('vComentario', vComentario);
-  
+
 
         for (var i = 0; i < files.length; i++) {
             vData.append(files[i].name, files[i]);
@@ -234,10 +298,10 @@
                     LimpiarControles();
                     CargarAsignacion();
                 } else {
-                    
+
                     swal("Ocurrió un error en la transacción")
-                    
-                
+
+
                 }
             }
         });
