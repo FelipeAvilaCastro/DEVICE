@@ -44,5 +44,12 @@ namespace DEVICE.Web.Areas.Persona.Controllers
             return Json(exito);
         }
 
+
+        public async Task<IActionResult> Obtener(int id)
+        {
+            var producto = await PersonaRepo.ObtenerPersonaPorID(id);
+            return Json(producto);
+        }
+
     }
 }

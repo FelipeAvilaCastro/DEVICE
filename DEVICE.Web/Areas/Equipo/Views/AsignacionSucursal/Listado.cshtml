@@ -31,3 +31,21 @@
     </tbody>
 
 </table>
+
+<script>
+
+    loadTable()
+
+    function loadTable() {
+
+        var table = $('#tbPersonaProducto').DataTable({
+            lengthChange: false,
+            buttons:['copy','excel','pdf','colvis']
+        });
+
+        table.buttons().container()
+            .insertBefore('#tbPersonaProducto_filter');
+
+    }
+
+</script>
