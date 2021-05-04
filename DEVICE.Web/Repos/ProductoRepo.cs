@@ -14,6 +14,19 @@ namespace DEVICE.Web.Repos
 
         }
 
+        public static async Task<Producto> ObtenerProductoPorPersonaProductoID(int personaProductoID)
+        {
+            using var data = new DeviceDBContext();
+
+            var query = await (from p in data.Producto
+                         join pp in data.PersonaProducto on p.Id equals pp.ProductoId
+                         where pp.Id == personaProductoID
+                         select p).FirstOrDefaultAsync();
+
+
+            return query;
+        }
+
         public static async Task<IEnumerable<Producto>> ObtenerProductoDisponible()
         {
             using var data = new DeviceDBContext();

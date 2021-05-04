@@ -38,7 +38,7 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
             return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "AsignacionPersona.csv");
         }
 
-      
+
 
         public async Task<IActionResult> Index()
         {
@@ -49,7 +49,7 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
 
             };
 
-           return View(equipopersonaVM);
+            return View(equipopersonaVM);
         }
 
         public async Task<IActionResult> Listado()
@@ -65,20 +65,37 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
             try
             {
 
+                bool tieneFirma = Convert.ToBoolean(Request.Form.Where(x => x.Key == "vTieneFirma").FirstOrDefault().Value);
+                bool tieneFoto = Convert.ToBoolean(Request.Form.Where(x => x.Key == "vTieneFoto").FirstOrDefault().Value);
+
+                int idPersonaProducto = Convert.ToInt32(Request.Form.Where(x => x.Key == "vIDPersonaProducto").FirstOrDefault().Value);
                 int idEquipo = Convert.ToInt32(Request.Form.Where(x => x.Key == "vEquipo").FirstOrDefault().Value);
                 int idPersona = Convert.ToInt32(Request.Form.Where(x => x.Key == "vPersona").FirstOrDefault().Value);
 
                 DateTime fechaEntrega = Convert.ToDateTime(Request.Form["vFechaEntrega"]).Date;
                 DateTime fechaProximoCambio = Convert.ToDateTime(Request.Form["vFechaProximoCambio"]).Date;
                 string comentario = Request.Form.Where(x => x.Key == "vComentario").FirstOrDefault().Value;
-                
-                
-                var fileFirma = Request.Form.Files.Count == 0 ? null : Request.Form.Files[0];
-                var fileFoto = Request.Form.Files.Count == 0 ? null : Request.Form.Files[1];
 
 
-                string fileNameFirma = fileFirma==null?"": Guid.NewGuid().ToString() + Path.GetExtension(fileFirma.FileName).ToLowerInvariant();
-                string fileNameFoto = fileFoto == null ? "" : DateTime.Now.ToFileTime().ToString() + Path.GetExtension(fileFoto.FileName).ToLowerInvariant();
+                var fileFirma = (dynamic)null;//Request.Form.Files.Count == 0 ? null : Request.Form.Files[0];
+                var fileFoto = (dynamic)null;   //Request.Form.Files.Count == 0 ? null : Request.Form.Files[1];
+                if (tieneFirma && tieneFoto)
+                {
+                    fileFirma = Request.Form.Files[0];
+                    fileFoto = Request.Form.Files[1];
+                }
+                else if (tieneFirma && !tieneFoto)
+                {
+                    fileFirma = Request.Form.Files[0];
+                }
+                else if (!tieneFirma && tieneFoto)
+                {
+                    fileFoto = Request.Form.Files[0];
+                }
+
+
+                string fileNameFirma = fileFirma == null ? fileFirma : Guid.NewGuid().ToString() + Path.GetExtension(fileFirma.FileName).ToLowerInvariant();
+                string fileNameFoto = fileFoto == null ? fileFoto : DateTime.Now.ToFileTime().ToString() + Path.GetExtension(fileFoto.FileName).ToLowerInvariant();
 
                 var asignacion = new PersonaProducto()
                 {
@@ -90,9 +107,16 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
                     Estado = true
                 };
 
-                exito = await PersonaProductoRepo.RegistrarPersonaProducto(asignacion);
+                if (idPersonaProducto == -1)
+                    exito = await PersonaProductoRepo.RegistrarPersonaProducto(asignacion);
+                else
+                {
+                    asignacion.Id = idPersonaProducto;
+                    exito = await PersonaProductoRepo.ActualizarPersonaProducto(asignacion);
+                }
 
-
+                if (!exito)
+                    return Json(false);
 
                 var evidenciaFirma = new PersonaProductoEvidencia();
                 var evidenciaFoto = new PersonaProductoEvidencia();
@@ -101,17 +125,34 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
                 {
                     if (fileFirma != null)
                     {
-                        evidenciaFirma.PersonaProductoId = asignacion.Id;
-                        evidenciaFirma.NombreArchivo = fileNameFirma;
-                        evidenciaFirma.FechaArchivo = DateTime.Now;
-                        evidenciaFirma.Tipo = "S";
+                        var evidenciaUpdate = await PersonaProductoEvidenciaRepo.ObtenerEvidenciaPorTipo(idPersonaProducto, "S");
+                        if (idPersonaProducto == -1 || evidenciaUpdate==null)
+                        {
+                            evidenciaFirma.PersonaProductoId = asignacion.Id;
+                            evidenciaFirma.NombreArchivo = fileNameFirma;
+                            evidenciaFirma.FechaArchivo = DateTime.Now;
+                            evidenciaFirma.Tipo = "S";
+                            exito = await PersonaProductoEvidenciaRepo.RegistrarEvidencia(evidenciaFirma);
+                        }
+                        else {                            
+                            evidenciaUpdate.PersonaProductoId = asignacion.Id;
+                            evidenciaUpdate.NombreArchivo = fileNameFirma;
+                            evidenciaUpdate.FechaArchivo = DateTime.Now;
+                            evidenciaUpdate.Tipo = "S";
+                            exito = await PersonaProductoEvidenciaRepo.ActualizarEvidencia(evidenciaUpdate);
+                        }
 
                         var filePath = Path.Combine(_env.ContentRootPath + "/Documents/AsignacionPersona/",
                             fileNameFirma);
 
                         using var stream = System.IO.File.Create(filePath);
                         await fileFirma.CopyToAsync(stream);
-                        exito = await PersonaProductoEvidenciaRepo.RegistrarEvidencia(evidenciaFirma);
+
+
+                        //if (idPersonaProducto == -1)
+                        //    exito = await PersonaProductoEvidenciaRepo.RegistrarEvidencia(evidenciaFirma);
+                        //else
+                        //    exito = await PersonaProductoEvidenciaRepo.ActualizarEvidencia(evidenciaFirma);
 
                     }
 
@@ -128,17 +169,31 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
                 {
                     if (fileFoto != null)
                     {
-                        evidenciaFoto.PersonaProductoId = asignacion.Id;
-                        evidenciaFoto.NombreArchivo = fileNameFoto;
-                        evidenciaFoto.FechaArchivo = DateTime.Now;
-                        evidenciaFoto.Tipo = "P";
+                        var evidenciaUpdate = await PersonaProductoEvidenciaRepo.ObtenerEvidenciaPorTipo(idPersonaProducto, "P");
+                        if (idPersonaProducto == -1 || evidenciaUpdate==null)
+                        {
+                            evidenciaFoto.PersonaProductoId = asignacion.Id;
+                            evidenciaFoto.NombreArchivo = fileNameFoto;
+                            evidenciaFoto.FechaArchivo = DateTime.Now;
+                            evidenciaFoto.Tipo = "P";
+                            exito = await PersonaProductoEvidenciaRepo.RegistrarEvidencia(evidenciaFoto);
+                        }
+                        else
+                        {
+                            
+                            evidenciaUpdate.PersonaProductoId = asignacion.Id;
+                            evidenciaUpdate.NombreArchivo = fileNameFoto;
+                            evidenciaUpdate.FechaArchivo = DateTime.Now;
+                            evidenciaUpdate.Tipo = "P";
+                            exito = await PersonaProductoEvidenciaRepo.ActualizarEvidencia(evidenciaUpdate);
+                        }
 
                         var filePath = Path.Combine(_env.ContentRootPath + "/Documents/AsignacionPersona/",
                             fileNameFoto);
 
                         using var stream = System.IO.File.Create(filePath);
                         await fileFoto.CopyToAsync(stream);
-                        exito = await PersonaProductoEvidenciaRepo.RegistrarEvidencia(evidenciaFoto);
+                        //exito = await PersonaProductoEvidenciaRepo.RegistrarEvidencia(evidenciaFoto);
 
                     }
 
@@ -151,10 +206,10 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
 
 
             }
-            catch (Exception )
-            
+            catch (Exception)
+
             {
-               
+
                 exito = false;
             }
 
@@ -162,7 +217,8 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CambiarEstado(int id,bool estado) {
+        public async Task<IActionResult> CambiarEstado(int id, bool estado)
+        {
 
             var exito = await PersonaProductoRepo.CambiarEstado(id, !estado);
             return Json(exito);
@@ -174,6 +230,13 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
             var producto = await PersonaProductoRepo.ObtenerPersonaProductoPorID(id);
             return Json(producto);
         }
+        public async Task<IActionResult> ObtenerProductoPorPersonaProductoID(int id)
+        {
+            var producto = await ProductoRepo.ObtenerProductoPorPersonaProductoID(id);
+            return Json(producto);
+        }
+
+        
 
         public FileResult DownloadFile(string fileName)
         {

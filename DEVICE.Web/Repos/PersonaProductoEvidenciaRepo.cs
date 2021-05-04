@@ -18,6 +18,14 @@ namespace DEVICE.Web.Repos
             return evidencia;
         }
 
+        public static async Task<PersonaProductoEvidencia> ObtenerEvidenciaPorTipo(int idPersonaProducto, string tipo)
+        {
+            using var data = new DeviceDBContext();
+            var evidencia = await data.PersonaProductoEvidencia
+                .Where(x => x.PersonaProductoId == idPersonaProducto && x.Tipo == tipo).FirstOrDefaultAsync();
+            return evidencia;
+        }
+
         public static async Task<IEnumerable<PersonaProductoEvidencia>> ObtenerEvidencia(int idPersonaProducto)
         {
             using var data = new DeviceDBContext();
@@ -25,6 +33,26 @@ namespace DEVICE.Web.Repos
                 .Where(x => x.PersonaProductoId== idPersonaProducto).ToListAsync();
             return evidencia;
         }
+
+        public static async Task<bool> ActualizarEvidencia(PersonaProductoEvidencia evidencia)
+        {
+            bool exito = true;
+            try
+            {
+                using var data = new DeviceDBContext();
+                var evidenciaNow = data.PersonaProductoEvidencia.Where(x => x.PersonaProductoId == evidencia.PersonaProductoId && x.Tipo==evidencia.Tipo).FirstOrDefault();
+                evidenciaNow.PersonaProductoId = evidencia.PersonaProductoId;
+                evidenciaNow.NombreArchivo = evidencia.NombreArchivo;
+                evidenciaNow.FechaArchivo = evidencia.FechaArchivo;
+                await data.SaveChangesAsync();
+            }
+            catch
+            {
+                exito = false;
+            }
+            return exito;
+        }
+
 
 
 
