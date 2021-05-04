@@ -27,6 +27,7 @@
                                 }
                             </select>
                             <input type="hidden" id="hidIDProducto" value="-1" />
+                            <input type="hidden" id="hidIDPersonaProducto" value="-1" />
                         </div>
 
                         <div class="form-group col-md-6">
@@ -39,7 +40,7 @@
                                     <option value="@item.Id">@item.Usuario</option>
                                 }
                             </select>
-                            <input type="hidden" id="hidIDAsignacionPersona" value="-1" />
+                            <input type="hidden" id="hidIDPersona" value="-1" />
 
                         </div>
                     </div>
@@ -65,6 +66,7 @@
                         <div class="form-group col-md-6">
                             <label for="inputCity">Adjuntar Firma</label>
                             <input type="file" class="form-control-file" id="txtFirma" name="firma">
+                            @*@Html.ActionLink("Firma", "DownloadFile", new { fileName = "" }, new { @class = "btn btn-success btnVerFirma" })*@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputCity">Adjuntar Foto</label>
@@ -95,58 +97,66 @@
 
         let vModal = $("#modalAsignacionPersona");
 
-        $("#hidIDAsignacionPersona").val(vId);
+        $("#hidIDPersonaProducto").val(vId);
 
-        $.ajax({
-            type: "GET",
-            url: "/Equipo/AsignacionPersona/Obtener",
+
+        var promise = $.ajax({
+            type: "POST",
+            url: '/Equipo/AsignacionPersona/ObtenerProductoPorPersonaProductoID',
             data: { id: vId },
             cache: false,
-            success: function (objPersona) {
-                console.log(objPersona);
-                LimpiarControles();
-                $("#hidIDAsignacionPersona").val(objPersona.Id);
+            success: function (objPersonaProducto) {
+                //alert(objPersonaProducto);
+                console.log(objPersonaProducto);
 
-                $("#cboEquipo").val(objPersona.productoId);
-                $("#cboPersona").val(objPersona.personaId);
 
-                let fechaProx = moment(objPersona.fechaEntrega).format('YYYY-MM-DD');
-                let fechaProxCambio = moment(objPersona.fechaProximoCambio).format('YYYY-MM-DD');
-                document.getElementById("txtFechaEntrega").value = fechaProx;
-                document.getElementById("txtFechaProximoCambio").value = fechaProxCambio;
+                $('#cboEquipo').append($('<option>', {
+                    value: objPersonaProducto.id,
+                    text: objPersonaProducto.modelo + " " + objPersonaProducto.numeroSerie
+                }));
+                $('#cboEquipo').val(objPersonaProducto.id);
 
-                $("#txtComentario").val(objPersona.comentario);
+                //if (exito) {
+                //    swal("Se actualizo correctamente");
+                //    CargarAsignacion();
 
-                if (objPersona.personaProductoEvidencia.length > 0) {
-                    console.log("entro if");
-
-                    //let obj = jQuery.parseJSON(objPersona.personaProductoEvidencia);
-                    $.each(objPersona.personaProductoEvidencia, function (i, item) {
-                        console.log("item: " + item.tipo);
-                        console.log("nombreArchivo: " + item.nombreArchivo);
-                        console.log("i: " + i);
-                        if (item.tipo == "S") {
-                            alert("IF ---> S");
-                            //$("#txtFirma").val(item.nombreArchivo);
-                        }
-                        //if (item.tipo == "P") {
-                        //    $("#txtFoto").val("ASDAS");
-                        //    alert("IF ---> P");
-                        //}
-
-                        //console.log("EACH.. " + objPersona.personaProductoEvidencia[i].tipo);
-                        //if (objPersona.personaProductoEvidencia[i].tipo == "S") {
-                        //    console.log("ES S");
-                        //    $("#txtFirma").val(objPersona.personaProductoEvidencia[i].nombreArchivo);
-                        //} else {
-                        //    console.log("ES P");
-                        //    $("#txtFoto").val(objPersona.personaProductoEvidencia[i].nombreArchivo);
-                        //}
-                    });
-                                                          
-                }
-                vModal.modal();            }
+                //} else {
+                //    swal("Ocurrió un error en la transacción");
+                //}
+            }
         });
+
+        promise.then(function () {
+            $.ajax({
+                type: "GET",
+                url: "/Equipo/AsignacionPersona/Obtener",
+                data: { id: vId },
+                cache: false,
+                success: function (objPersona) {
+                    console.log(objPersona);
+                    LimpiarControles();
+
+                    $("#hidIDProducto").val(objPersona.personaId);
+                    $("#hidIDPersona").val(objPersona.productoId);
+                    $("#hidIDPersonaProducto").val(objPersona.id);
+
+                    $("#cboEquipo").val(objPersona.productoId);
+                    $("#cboPersona").val(objPersona.personaId);
+
+                    let fechaProx = moment(objPersona.fechaEntrega).format('YYYY-MM-DD');
+                    let fechaProxCambio = moment(objPersona.fechaProximoCambio).format('YYYY-MM-DD');
+                    document.getElementById("txtFechaEntrega").value = fechaProx;
+                    document.getElementById("txtFechaProximoCambio").value = fechaProxCambio;
+
+                    $("#txtComentario").val(objPersona.comentario);
+
+                    vModal.modal();
+                }
+            });
+        });
+
+
+  
 
 
 
@@ -213,6 +223,11 @@
         $("#txtComentario").val("");
         $("#txtFirma").val("");
         $("#txtFoto").val("");
+        $("#hidIDProducto").val(-1);
+        $("#hidIDPersona").val(-1);
+        $("#hidIDPersonaProducto").val(-1);
+        $("#txtFirma").val("");
+        $("#txtFoto").val("");
 
     }
 
@@ -243,6 +258,7 @@
 
 
     $("#btnNuevo").click(function () {
+        LimpiarControles();
         $("#modalAsignacionPersona").modal();
     });
 
@@ -250,6 +266,7 @@
     $("#btnGuardarAsignacion").click(function () {
         let vIDProducto = $("#hidIDProducto").val();
         let vIDPersona = $("#hidIDPersona").val();
+        let vIDPersonaProducto = $("#hidIDPersonaProducto").val();
 
         let vEquipo = $("#cboEquipo").val();
         let vPersona = $("#cboPersona").val();
@@ -266,10 +283,15 @@
         let vFotoUpload = $("#txtFoto").get(0);
         let files = vFirmaUpload.files;
         let files2 = vFotoUpload.files;
+        /*alert("files: " + $("#txtFirma").val() + " files2: " + $("#txtFoto").val());*/
         let vData = new FormData();
+        //return false;
+        vData.append('vTieneFirma', $("#txtFirma").val() == "" ? false : true);
+        vData.append('vTieneFoto', $("#txtFoto").val() == "" ? false : true);
 
         vData.append('vIDProducto', vIDProducto);
         vData.append('vIDPersona', vIDPersona);
+        vData.append('vIDPersonaProducto', vIDPersonaProducto);
         vData.append('vEquipo', vEquipo);
         vData.append('vPersona', vPersona);
         vData.append('vFechaEntrega', dateFechaEntrega);
