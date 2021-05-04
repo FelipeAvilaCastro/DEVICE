@@ -84,8 +84,8 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
                 {
                     PersonaId = idPersona,
                     ProductoId = idEquipo,
-                    FechaProximaCambio = fechaEntrega,
-                    FechaEntrega = fechaProximoCambio,
+                    FechaProximaCambio = fechaProximoCambio,
+                    FechaEntrega = fechaEntrega,
                     Comentario = comentario,
                     Estado = true
                 };
