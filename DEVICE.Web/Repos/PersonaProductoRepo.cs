@@ -53,6 +53,8 @@ namespace DEVICE.Web.Repos
                 using var data = new DeviceDBContext();
 
                 exito = await data.PersonaProducto.Where(x => x.ProductoId == personaProducto.ProductoId).AnyAsync();
+                
+
                 if (!exito)
                     return false;
 

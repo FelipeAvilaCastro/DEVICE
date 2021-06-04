@@ -422,33 +422,39 @@
 
     $("#divListado").on('click', '.btnEliminarProducto', function () {
         let vIdProducto = $(this).attr('data-id');
-        //swal({
-        //    title: "Are you sure?",
-        //    text: "Your will not be able to recover this imaginary file!",
-        //    type: "warning",
-        //    showCancelButton: true,
-        //    confirmButtonClass: "btn-danger",
-        //    confirmButtonText: "Yes, delete it!",
-        //    closeOnConfirm: false
-        //},
-        //    function () {
-        //        swal("Deleted!", "Your imaginary file has been deleted.", "success");
-        //    });
-        $.ajax({
-            type: "POST",
-            url: '/Equipo/Registro/Eliminar',
-            data: { id: vIdProducto },
-            cache: false,
-            success: function (exito) {
-                if (exito) {
-                    swal("La Empresa fue eliminada exitosamente.");
-                    CargarProductos();
-                    limpiarControles();
+        swal({
+            title: "Eliminar",
+            text: "¿Estas seguro que deseas Eliminar el Producto?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "si, deseo Eliminar el Producto",
+
+            closeOnConfirm: false,
+              closeOnCancel: false
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/Equipo/Registro/Eliminar',
+                        data: { id: vIdProducto },
+                        cache: false,
+                        success: function (exito) {
+                            if (exito) {
+                                swal("El producto fue eliminado exitosamente.");
+                                CargarProductos();
+                                limpiarControles();
+                            } else {
+                                swal("Ocurrió un error en la transacción");
+                            }
+                        }
+                    });
+
                 } else {
-                    swal("Ocurrió un error en la transacción");
+                    swal("Cancelado!", "No se llevo ninguna accion", "success");
                 }
-            }
-        });
+            });
     });
 
     $("#divListado").on('click', '.btnEditarProducto', function () {

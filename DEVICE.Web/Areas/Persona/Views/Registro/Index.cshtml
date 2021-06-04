@@ -172,7 +172,7 @@
         $("#divListadoPersona").on('click', '.btnEliminarProducto', function () {
             let vIdPersona = $(this).attr('data-id');
             //swal({
-            //    title: "Are you sure?",
+            //    title: "Eliminar",
             //    text: "Your will not be able to recover this imaginary file!",
             //    type: "warning",
             //    showCancelButton: true,
@@ -190,7 +190,7 @@
                 cache: false,
                 success: function (exito) {
                     if (exito) {
-                        swal("La Empresa fue eliminada exitosamente.");
+                        swal("La Persona fue eliminada exitosamente.");
                         CargarPersona();
                         /*limpiarControles();*/
                     } else {

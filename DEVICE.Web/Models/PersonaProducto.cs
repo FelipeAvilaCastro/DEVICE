@@ -15,8 +15,8 @@ namespace DEVICE.Web.Models
         public int Id { get; set; }
         public int? PersonaId { get; set; }
         public int? ProductoId { get; set; }
-        public DateTime? FechaProximaCambio { get; set; }
         public DateTime? FechaEntrega { get; set; }
+        public DateTime? FechaProximaCambio { get; set; }
         public string Comentario { get; set; }
         public bool? Estado { get; set; }
         public DateTime? FechaLiberacion { get; set; }
