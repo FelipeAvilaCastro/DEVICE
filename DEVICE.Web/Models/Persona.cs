@@ -18,8 +18,11 @@ namespace DEVICE.Web.Models
         public string Materno { get; set; }
         public string Nombres { get; set; }
         public string Usuario { get; set; }
+        public string Clave { get; set; }
         public string Password { get; set; }
+        public int? DepartamentoID { get; set; }
         public string Puesto { get; set; }
+        public int? SucursalID { get; set; }
         public string Telefono { get; set; }
         public string Correo { get; set; }
         public bool? Estado { get; set; }

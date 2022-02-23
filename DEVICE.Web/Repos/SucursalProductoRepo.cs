@@ -13,13 +13,13 @@ namespace DEVICE.Web.Repos
         public static async Task<IEnumerable<SucursalProducto>> ObtenerSucursalProducto()
         {
             using var data = new DeviceDBContext();
-            return await data.SucursalProducto.Include("Sucursal").Include("Producto").ToListAsync();
+            return await data.SucursalProducto.Include("Sucursal").Include("Producto").Include("SucursalProductoEvidencia").ToListAsync();
         }
 
         public static async Task<SucursalProducto> ObtenerSucursalProductoPorID(int id)
         {
             using var data = new DeviceDBContext();
-            return await data.SucursalProducto.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await data.SucursalProducto.Include("Sucursal").Include("Producto").Include("SucursalProductoEvidencia").Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         public static async Task<bool> RegistrarSucursalProducto(SucursalProducto sucursalProducto)
@@ -39,16 +39,38 @@ namespace DEVICE.Web.Repos
             return exito;
         }
 
+        public static async Task<bool> ActualizarSucursalProducto(SucursalProducto sucursalProducto)
+        {
+            bool exito = true;
+            try
+            {
+                using var data = new DeviceDBContext();
+                var productoNow = data.SucursalProducto.Where(x => x.Id == sucursalProducto.Id).FirstOrDefault();
+                productoNow.SucursalId = sucursalProducto.SucursalId;
+                productoNow.ProductoId = sucursalProducto.ProductoId;
+                productoNow.FechaEntrega = sucursalProducto.FechaEntrega;
+                productoNow.Comentario = sucursalProducto.Comentario;
+
+                //data.PersonaProducto.Add(personaProducto);
+                await data.SaveChangesAsync();
+            }
+            catch
+            {
+                exito = false;
+            }
+            return exito;
+        }
+
+
         public static async Task<bool> CambiarEstado(int id, bool estado)
         {
             using var data = new DeviceDBContext();
-            //var personaProducto = await data.PersonaProducto.Where(x => x.Id == id).FirstOrDefault();
-            var personaProducto = await data.PersonaProducto.Where(x => x.Id == id).FirstOrDefaultAsync();
-            personaProducto.Estado = estado;
+           
+            var sucursalProducto = await data.SucursalProducto.Where(x => x.Id == id).FirstOrDefaultAsync();
+            sucursalProducto.Estado = estado;
 
             int rowCount = await data.SaveChangesAsync();
             return (rowCount > 0 ? true : false);
-
         }
 
 

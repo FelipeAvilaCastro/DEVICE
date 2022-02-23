@@ -10,6 +10,24 @@ namespace DEVICE.Web.Repos
     public class SucursalRepo
     {
 
+        public SucursalRepo()
+        {
+
+        }
+
+        public static async Task<Producto> ObtenerProductoPorSucursalProductoID(int sucursalProductoID)
+        {
+            using var data = new DeviceDBContext();
+
+            var query = await (from p in data.Producto
+                               join sp in data.SucursalProducto on p.Id equals sp.ProductoId
+                               where sp.Id == sucursalProductoID
+                               select p).FirstOrDefaultAsync();
+            return query;
+        }
+
+
+
         public static async Task<IEnumerable<Sucursal>> ObtenerSucursal()
         {
             using var data = new DeviceDBContext();

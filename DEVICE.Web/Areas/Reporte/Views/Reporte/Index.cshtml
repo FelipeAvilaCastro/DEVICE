@@ -1,0 +1,67 @@
+﻿@using System.Data;
+@{
+    ViewData["Title"] = "Reportes";
+    DataTable dt = ViewBag.data;
+}
+
+<div>
+    <a href="/Reporte/Reporte?activar=yes" id="btnNuevo" class="btn btn-primary">Reporte Laptops por Usuario</a>
+</div>
+
+<div class="container-fluid">
+    @if (dt.Rows.Count > 0)
+    {
+        <table class="table table-striped" id="tbDispositivosPorUsuario" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Persona</th>
+                    <th>Sucursal</th>
+                    <th>Puesto</th>
+                    <th>Producto</th>
+                    <th>Numero de Serie</th>
+                    <th>Modelo</th>
+                    <th>RAM</th>
+                    <th>IP</th>
+                    <th>Fecha Proximo Cambio</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow dr in dt.Rows)
+                {
+                <tr>
+                    <td>@dr[0].ToString()</td>
+                    <td>@dr[1].ToString()</td>
+                    <td>@dr[2].ToString()</td>
+                    <td>@dr[3].ToString()</td>
+                    <td>@dr[4].ToString()</td>
+                    <td>@dr[5].ToString()</td>
+                    <td>@dr[6].ToString()</td>
+                    <td>@dr[7].ToString()</td>
+                    <td>@dr[8].ToString()</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+        <script>
+            loadTable()
+            function loadTable() {
+                var table = $('#tbDispositivosPorUsuario').DataTable({
+                    
+                   /* lengthChange: false,*/
+                    /*buttons: ['copy', 'excel', 'pdf','csv','print','colvis']*/
+                    buttons: ['copy', 'excel', 'pdf', 'print', 'colvis']
+                });
+
+                table.buttons().container()
+                    .insertBefore('#tbDispositivosPorUsuario_filter');
+
+            }
+        </script>
+
+
+    }
+
+</div>
+

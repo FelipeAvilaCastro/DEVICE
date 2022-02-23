@@ -12,7 +12,6 @@ namespace DEVICE.Web.ViewModels
         public IEnumerable<Software> ListadoSoftware { get; set; }
         public IEnumerable<SoftwareModulo> ListadoSoftwareModulo { get; set; }
         public IEnumerable<SoftwareVersion> ListadoSoftwareVersion { get; set; }
-
-
+        public IEnumerable<Correo> ListadoCorreo { get; set; }
     }
 }

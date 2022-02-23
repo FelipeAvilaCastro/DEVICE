@@ -1,0 +1,209 @@
+﻿@using DEVICE.Web.ViewModels
+@model EquipoLicenciaViewModel
+@{
+    ViewData["Title"] = "Asignacion de Licencia";
+}
+<button id="btnNuevo" class="btn btn-primary">Nuevo</button>
+<!-- Modal -->
+<div id="modalAsignacionLicencia" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Asignacion Licencia</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Equipo</label>
+                            <select id="cboEquipo" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoProducto)
+                                {
+                                    <option value="@item.Id">@(item.Modelo + " " + item.NumeroSerie)</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDProducto" value="-1" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Licencia</label>
+                            @*<input type="text" name="" class="form-control" id="txtSucursal" placeholder="Seleccione la sucrusal">*@
+
+                            <select id="cboLicencia" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoLicencia)
+                                {
+                                    <option value="@item.Id">@item.NumeroLicenciaTarjeta</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDLicencia" value="-1" />
+                            <input type="hidden" id="hidIDProductoLicencia" value="-1" />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputCity">Fecha Instalacion</label>
+                        <input type="date" class="form-control" id="txtFechaInstalacion">
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputCity">Adjuntar Foto</label>
+                            <input type="file" class="form-control-file" id="txtFoto" name="foto">
+                        </div>
+
+
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarAsignacionLic">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div id="divListadoAsignacionLicencia">
+</div>
+
+<script src="~/lib/moment.js/moment.js"></script>
+
+
+<script>
+
+    CargarAsignacion()
+    function CargarAsignacion() {
+        //alert(baseUrl);
+        $.ajax({
+            type: "GET",
+            url: "/Equipo/AsignacionLicencia/Listado",
+            cache: false,
+            success: function (dataHtml) {
+                $("#divListadoAsignacionLicencia").html(dataHtml);
+
+            }
+        });
+    }
+
+    $("#btnNuevo").click(function () {
+        $("#modalAsignacionLicencia").modal();
+    });
+
+
+    $("#btnGuardarAsignacionLic").click(function () {
+        let vIDProducto = $("#hidIDProducto").val();
+        /*alert(vIDProducto);*/
+        let vIDLicencia = $("#hidIDLicencia").val();
+        let vIDProductoLicencia = $("#hidIDProductoLicencia").val();
+
+        let vEquipo = $("#cboEquipo").val();
+        let vLicencia = $("#cboLicencia").val();
+        let vFechaInstalacion = $("#txtFechaInstalacion").val();
+    /*var dateFechaInstalacion = (new Date(vFechaInstalacion)).toUTCString();*/
+        var dateFechaInstalacion = vFechaInstalacion;
+        let vFotoUpload = $("#txtFoto").get(0);
+        let files = vFotoUpload.files;
+        let vData = new FormData();
+
+        
+        vData.append('vIDProducto', vIDProducto);
+        vData.append('vIDLicencia', vIDLicencia);
+        vData.append('vIDProductoLicencia', vIDProductoLicencia);
+        vData.append('vEquipo', vEquipo);
+        vData.append('vLicencia', vLicencia);
+        vData.append('vFechaInstalacion', dateFechaInstalacion);
+        vData.append('vTieneFoto', $("#txtFoto").val() == "" ? false : true);
+
+        for (var i = 0; i < files.length; i++) {
+            vData.append(files[i].name, files[i]);
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/Equipo/AsignacionLicencia/Guardar',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: vData,
+            success: function (exito) {
+                if (exito) {
+                    swal("Good job!", "Se registró satisfactoriamente", "success")
+                    $("#modalAsignacionSucursal").modal("toggle");
+                    LimpiarControles();
+                    CargarAsignacion();
+                } else {
+                    swal("Ocurrió un error en la transacción")
+
+                }
+            }
+        });
+
+
+    });
+
+
+    $("#divListadoAsignacionLicencia").on('click', '.btnEditarAsignacionLicencia', function () {
+        let vId = $(this).attr('data-id');
+        let vModal = $("#modalAsignacionLicencia");
+
+        $("#hidIDProductoLicencia").val(vId);
+
+
+        var promise = $.ajax({
+            type: "POST",
+            url: '/Equipo/AsignacionLicencia/ObtenerProductoPorProductoLicenciaID',
+            data: { id: vId },
+            cache: false,
+            success: function (objProductoLicencia) {
+
+                console.log(objProductoLicencia);
+
+
+                $('#cboEquipo').append($('<option>', {
+                    value: objProductoLicencia.id,
+                    text: objProductoLicencia.modelo + " " + objProductoLicencia.numeroSerie
+                }));
+                $('#cboEquipo').val(objProductoLicencia.id);
+                $("#modalAsignacionLicencia").modal("toggle");
+            }
+        });
+
+        promise.then(function () {
+            $.ajax({
+                type: "GET",
+                url: "/Equipo/AsignacionLicencia/Obtener",
+                data: { id: vId },
+                cache: false,
+                success: function (objLicencia) {
+                    console.log(objLicencia);
+                    /*LimpiarControles();*/
+
+                    $("#hidIDProductoLicencia").val(objLicencia.id);
+                    $("#hidIDProducto").val(objLicencia.productoId);
+                    $("#hidIDLicencia").val(objLicencia.licenciaId);
+                    
+                    $("#cboEquipo").val(objLicencia.productoId);
+                    $("#cboLicencia").val(objLicencia.licenciaId);
+
+                    let fechaConf = moment(objLicencia.fechaConfiguracion).format('YYYY-MM-DD');
+                    document.getElementById('txtFechaInstalacion').value = fechaConf;
+
+                    /*$("#txtComentario").val(objPersona.comentario);*/
+
+                    vModal.modal();
+                }
+            });
+        });
+
+    });
+
+
+
+</script>

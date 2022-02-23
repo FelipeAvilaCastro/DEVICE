@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "Registro de Parte";
+}
+
+<button id="btnNuevo" class="btn btn-primary">Nuevo</button>
+
+<!-- Modal -->
+<div id="modalParte" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Registro Parte</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputNumeroParte">No. Parte</label>
+                            <input type="hidden" id="hidIDParte" value="-1" />
+                            <input type="text" name="NumeroParte" class="form-control" id="txtNumeroParte" placeholder="Ingrese el número de parte">
+                        </div>
+
+                        <div class="form-group col-md-8">
+                            <label for="inputDescripcion">Descripcion</label>
+                            <input type="text" name="Descripcion" class="form-control" id="txtDescripcion">
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarParte">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div id="divListadoParte">
+
+</div>
+
+
+
+<script>
+
+    function limpiarControles() {
+        $("#hidIDDepartamento").val(-1);
+        $("#txtNumeroParte").val("");
+        $("#txtDescripcion").val("");
+    }
+
+
+    CargarParte()
+    function CargarParte() {
+        //alert(baseUrl);
+        $.ajax({
+            type: "GET",
+            url: "/Configuracion/Parte/Listado",
+            cache: false,
+            success: function (dataHtml) {
+                $("#divListadoParte").html(dataHtml);
+                //$("#divListadoEmpresa #tbEmpresa").DataTable();
+            }
+        });
+    }
+
+    $("#btnNuevo").click(function () {
+        LimpiarControles();
+        $("#modalParte").modal();
+    });
+
+
+    $("#btnGuardarParte").click(function () {
+        let vIDParte = $("#hidIDParte").val();
+        let vNoParte = $("#txtNumeroParte").val();
+        let vDescripcion = $("#txtDescripcion").val();
+
+        var objParte = JSON.stringify({
+            ID: (vIDParte == -1 ? 0 : vIDParte),
+            NoParte: vNoParte,
+            Descripcion: vDescripcion
+        });
+        var dataType = 'application/json; charset=utf-8';
+        $.ajax({
+            type: 'POST',
+            url: '/Configuracion/Parte/Index',
+            dataType: 'json',
+            contentType: dataType,
+            data: objParte,
+            success: function (exito) {
+                if (exito) {
+                    swal("Good job!", "La Parte Se registró satisfactoriamente", "success")
+                    CargarParte();
+                    LimpiarControles();
+                    /*habilitarcontroles();*/
+                    $("#modalParte").modal("toggle");
+
+                } else {
+                    swal("Ocurrió un error en la transacción")
+                }
+            }
+        });
+    });
+
+
+
+
+</script>

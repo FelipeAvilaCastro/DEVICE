@@ -1,0 +1,72 @@
+﻿@using DEVICE.Web.Models
+@model IEnumerable<ProductoLicencia>
+@{
+
+    var nombreFoto = String.Empty;
+}
+
+
+<h5>Listado Asignacion Licencia</h5>
+<table id="tbProductoLicencia" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <th>Prodcuto</th>
+            <th>Licencia</th>
+            <th>Fecha Configuracion</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+        <tr>
+            @*<td>@item.Sucursal.Descripcion</td>*@
+            <td>@(item.Producto.Modelo + " " + item.Producto.NumeroSerie)</td>
+            <td>@(item.Licencia.NumeroLicenciaTarjeta + " " + item.Licencia.NumeroLicenciaWeb)</td>
+            @*<td>@item.FechaEntrega.Value.ToShortDateString()</td>*@
+            <td>@item.FechaConfiguracion.Value.ToShortDateString()</td>
+            <td>@(item.Estado==true?"Asignado":"Liberado")</td>
+            <td>
+                <button data-id="@item.Id" data-estado="@item.Estado" class="btn btn-warning btnEditarAsignacionLicencia" title="Editar">
+                    Editar
+                </button>
+                @if (nombreFoto != "#")
+                {
+                    @Html.ActionLink("Foto", "DownloadFile", new { fileName = nombreFoto }, new { @class = "btn btn-primary" })
+                }
+                <button data-id="@item.Id" data-estado="@item.Estado" class="btn btn-success btnCambiarEstado" title="Cambiar Estado">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z" />
+                    </svg>
+                </button>
+            </td>
+        </tr>
+
+        }
+
+    </tbody>
+
+</table>
+
+<script>
+
+    loadTable()
+
+    function loadTable() {
+
+        var table = $('#tbProductoLicencia').DataTable({
+            lengthChange: false,
+            buttons: ['copy', 'excel', 'pdf', 'print']
+
+/*            'colvis'*/
+        });
+
+        table.buttons().container()
+            .insertBefore('#tbProductoLicencia_filter');
+
+    }
+
+</script>

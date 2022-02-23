@@ -1,0 +1,347 @@
+﻿
+@*@model DEVICE.Web.ViewModels.RegistroProveedorViewModel*@
+
+@using DEVICE.Web.ViewModels
+@model RegistroProveedorViewModel
+
+
+@{
+    ViewData["Title"] = "Registro de Proveedor";
+}
+
+<div>
+    <button id="btnNuevo" class="btn btn-primary">Nuevo</button>
+</div>
+
+<div class="modal fade" id="modalRegistroProveedor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Registro Proveedor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Nombre</label>
+                            <input type="hidden" id="hidIDProveedor" value="-1" />
+                            <input type="text" name="Nombre" class="form-control" id="txtNombre" placeholder="">
+                            <input type="hidden" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputPassword4">RFC</label>
+                            <input type="text" name="RFC" class="form-control" id="txtRFC" placeholder="">
+                            <input type="hidden" />
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-group col-md-9">
+                            <label for="inputCity">Razon Social</label>
+                            <input type="text" name="RazonSocial" class="form-control" id="txtRazonSocial" placeholder="">
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="inputCity">Direccion</label>
+                            <input type="text" class="form-control" id="txtDireccion" name="">
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-group col-md-9">
+                            <label for="inputCity">Colonia</label>
+                            <input type="text" class="form-control" id="txtColonia" name="">
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Pais</label>
+                            <select name="PaisID" id="cboPais" class="form-control">
+                                <option selected value="-1">---SELECCIONE---</option>
+                                @foreach (var item in Model.ListadoPais)
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Estado</label>
+                            <select name="EstadoID" id="cboEstado" class="form-control">
+                                <option selected value="-1">---SELECCIONE---</option>
+                                @foreach (var item in Model.ListadoEstado)
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Ciudad</label>
+                            <select name="CiudadID" id="cboCiudad" class="form-control">
+                                <option selected value="-1">---SELECCIONE---</option>
+                                @foreach (var item in Model.ListadoCiudad)
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Codigo Postal</label>
+                            <input type="text" class="form-control" id="txtCodigoPostal" name="">
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputCity">E-Mail</label>
+                            <input type="text" class="form-control" id="txtEmail" name="">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="inputCity">Sitio Web</label>
+                            <input type="text" class="form-control" id="txtSitioWeb" name="">
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputCity">Contacto</label>
+                            <input type="text" class="form-control" id="txtContacto" name="">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="inputCity">Telefono</label>
+                            <input type="text" class="form-control" id="txtTelefono" name="">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="inputCity">Observacion</label>
+                        <input type="text" class="form-control" id="txtObservacion" name="">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputCity">Fecha Registro</label>
+                            <input type="date" class="form-control" id="txtfecharegistro" name="">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="inputCity">Usuario quien Registro</label>
+                            <input type="text" class="form-control" id="txtUsuarioRegistro" name="">
+                        </div>
+                    </div>
+
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarProveedor">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<hr />
+
+<div id="divListadoProveedor">
+
+</div>
+
+<script>
+
+    function limpiarControles() {
+        $("#hidIDProveedor").val(-1);
+        $("#txtNombre").val("");
+        $("#txtRFC").val("");
+        $("#txtRazonSocial").val("");
+        $("#txtDireccion").val("");
+        $("#txtColonia").val("");
+        $("#cboPais").val(-1);
+        $("#cboEstado").val(-1);
+        $("#cboCiudad").val(-1);
+        $("#txtCodigoPostal").val("");
+        $("#txtEmail").val("");
+        $("#txtSitioWeb").val("");
+        $("#txtContacto").val("");
+        $("#txtTelefono").val("");
+        $("#txtObservacion").val("");
+        $("#txtfecharegistro").val("");
+        $("#txtUsuarioRegistro").val("");
+    }
+
+    CargarProveedor()
+    function CargarProveedor() {
+        //alert(baseUrl);
+        $.ajax({
+            type: "GET",
+            url: "/Proveedor/Registro/Listado",
+            cache: false,
+            success: function (dataHtml) {
+                $("#divListadoProveedor").html(dataHtml);
+            }
+        });
+    }
+
+    $("#btnNuevo").click(function () {
+        limpiarControles();
+        $("#modalRegistroProveedor").modal();
+    });
+
+    $("#btnGuardarProveedor").click(function () {
+        let vIDProveedor = $("#hidIDProveedor").val();
+        /*alert(vIDProveedor)*/
+        let vNombre = $("#txtNombre").val();
+        let vRFC = $("#txtRFC").val();
+        let vRazonSocial = $("#txtRazonSocial").val();
+        let vDireccion = $("#txtDireccion").val();
+        let vColonia = $("#txtColonia").val();
+        let vPaisID = $("#cboPais").val();
+        let vEstadoID = $("#cboEstado").val();
+        let vCiudadID = $("#cboCiudad").val(); 
+        let vCodigoPostal = $("#txtCodigoPostal").val();
+        let vEmail = $("#txtEmail").val();
+        let vSitioWeb = $("#txtSitioWeb").val();
+        let vContacto = $("#txtContacto").val();
+        let vTelefono = $("#txtTelefono").val();
+        let vObservacion = $("#txtObservacion").val();
+        let vUsuarioRegistro = $("#txtUsuarioRegistro").val();
+        let vFechaRegistro = $("#txtfecharegistro").val();
+
+
+
+        var objProveedor = JSON.stringify({
+            ID: (vIDProveedor == -1 ? 0 : vIDProveedor),
+            Nombre: vNombre,
+            RFC: vRFC,
+            RazonSocial: vRazonSocial,
+            Direccion: vDireccion,
+            Colonia: vColonia,
+            PaisID: vPaisID,
+            EstadoID: vEstadoID,
+            CiudadID: vCiudadID,
+            CodigoPostal: vCodigoPostal,
+            Email: vEmail,
+            SitioWeb: vSitioWeb,
+            Contacto: vContacto,
+            Telefono: vTelefono,
+            Observacion: vObservacion,
+            UsuarioRegistro: vUsuarioRegistro,
+            FechaRegistro: vFechaRegistro 
+    });
+
+        var dataType = 'application/json; charset=utf-8';
+        $.ajax({
+            type: 'POST',
+            url: '/Proveedor/Registro/Index',
+            dataType: 'json',
+            contentType: dataType,
+            data: objProveedor,
+
+            success: function (exito) {
+                if (exito=="OK") {
+                    swal("Good job!", "El proveedor Se registró satisfactoriamente", "success")
+                    $("#modalRegistroProveedor").modal("toggle");
+                    CargarProveedor();
+                    limpiarControles();
+                } else {
+                    swal("Ocurrió un error en la transacción")
+                }
+            }
+        });
+    });
+
+    $("#divListadoProveedor").on('click', '.btnEditarProveddor', function () {
+        let modalRegistro = $("#modalRegistroProveedor");
+        let vIdProveedor = $(this).attr('data-id');
+        /* $("#hidIDProducto").val(vIdPersona);*/
+        $.ajax({
+            type: "GET",
+            url: "/Proveedor/Registro/ObtenerProveedor",
+            data: { id: vIdProveedor },
+            cache: false,
+            success: function (objProveedor) {
+                console.log(objProveedor);
+                limpiarControles();
+                $("#hidIDProveedor").val(objProveedor.id);
+                $("#txtNombre").val(objProveedor.nombre);
+                $("#txtRFC").val(objProveedor.rfc);
+                $("#txtRazonSocial").val(objProveedor.razonSocial);
+                $("#txtDireccion").val(objProveedor.direccion);
+                $("#txtColonia").val(objProveedor.colonia);
+                $("#cboPais").val(objProveedor.paisID);
+                $("#cboEstado").val(objProveedor.estadoID);
+                $("#cboCiudad").val(objProveedor.ciudadID);
+
+                $("#txtCodigoPostal").val(objProveedor.codigoPostal);
+                $("#txtEmail").val(objProveedor.email);
+                $("#txtSitioWeb").val(objProveedor.sitioWeb);
+                $("#txtContacto").val(objProveedor.contacto);
+                $("#txtTelefono").val(objProveedor.telefono);
+                $("#txtObservacion").val(objProveedor.observacion);
+                $("#txtfecharegistro").val(objProveedor.fechaRegistro);
+                $("#txtUsuarioRegistro").val(objProveedor.usuarioRegistro);
+
+                modalRegistro.modal()
+            }
+        });
+    })
+
+    $("#divListadoProveedor").on('click', '.btnEliminarProveedor', function () {
+        let vIdProveedor = $(this).attr('data-id');
+        swal({
+            title: "Eliminar",
+            text: "¿Estas seguro que deseas Eliminar el Proveedor?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "si, deseo Eliminar el Proveedor",
+
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/Proveedor/Registro/Eliminar',
+                        data: { id: vIdProveedor },
+                        cache: false,
+                        success: function (exito) {
+                            if (exito) {
+                                swal("El Proveedor fue eliminado exitosamente.");
+                                CargarProveedor();
+                                limpiarControles();
+                            } else {
+                                swal("Ocurrió un error en la transacción");
+                            }
+                        }
+                    });
+
+                } else {
+                    swal("Cancelado!", "No se llevo ninguna accion", "success");
+                }
+            });
+    });
+
+</script>

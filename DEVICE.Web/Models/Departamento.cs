@@ -10,7 +10,7 @@ namespace DEVICE.Web.Models
         public Departamento()
         {
             SucursalDepartamento = new HashSet<SucursalDepartamento>();
-            Ubicacion = new HashSet<Ubicacion>();
+            //Ubicacion = new HashSet<Ubicacion>();
         }
 
         public int Id { get; set; }
@@ -18,6 +18,6 @@ namespace DEVICE.Web.Models
         public bool? Estado { get; set; }
 
         public virtual ICollection<SucursalDepartamento> SucursalDepartamento { get; set; }
-        public virtual ICollection<Ubicacion> Ubicacion { get; set; }
+        //public virtual ICollection<Ubicacion> Ubicacion { get; set; }
     }
 }

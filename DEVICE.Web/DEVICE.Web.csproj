@@ -6,8 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameWorkCore.SqlServer" Version="5.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameWorkCore.Tools" Version="5.0.4">
+    <PackageReference Include="Microsoft.EntityFrameWorkCore.SqlServer" Version="5.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameWorkCore.Tools" Version="5.0.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -17,18 +17,21 @@
   <ItemGroup>
     <Folder Include="Areas\Administrativo\Data\" />
     <Folder Include="Areas\Administrativo\Models\" />
-    <Folder Include="Areas\Configuracion\Controllers\" />
     <Folder Include="Areas\Configuracion\Data\" />
     <Folder Include="Areas\Configuracion\Models\" />
-    <Folder Include="Areas\Configuracion\Views\" />
     <Folder Include="Areas\Equipo\Data\" />
     <Folder Include="Areas\Equipo\Models\" />
     <Folder Include="Areas\Licencia\Data\" />
     <Folder Include="Areas\Licencia\Models\" />
     <Folder Include="Areas\Persona\Data\" />
     <Folder Include="Areas\Persona\Models\" />
+    <Folder Include="Areas\Proveedor\Data\" />
+    <Folder Include="Areas\Proveedor\Models\" />
+    <Folder Include="Areas\Reporte\Data\" />
+    <Folder Include="Areas\Reporte\Models\" />
     <Folder Include="Documents\AsignacionPersona\" />
     <Folder Include="Documents\AsignacionSucursal\" />
+    <Folder Include="Documents\AsignacionLicencia\" />
   </ItemGroup>
 
   <ItemGroup>

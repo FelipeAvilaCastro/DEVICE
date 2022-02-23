@@ -1,14 +1,20 @@
 ﻿@using DEVICE.Web.Models
 @model IEnumerable<SucursalProducto>
+@{ 
+    var nombreFoto = String.Empty;
+}
 
-<table class="table table-bordered">
+
+<h5>Listado Asignacion de Sucursal</h5>
+<table id="tbSucursalProducto" class="display" style="width:100%">
     <thead>
         <tr>
-            <th>Sucursal</th>
-            <th>Producto</th>
-            <th>Fecha Entrega</th>
-            <th>Estado</th>
-            <th></th>
+            <th style="width:10%">Sucursal</th>
+            <th style="width:20%">Producto</th>
+            <th style="width:10%">Fecha Entrega</th>
+            <th style="width:10%">Estado</th>
+            <th style="width:10%"></th>
+            <th style="width:30%"></th>
         </tr>
     </thead>
 
@@ -16,15 +22,43 @@
 
         @foreach (var item in Model)
         {
-            <tr>
-                <td>@item.Sucursal.Descripcion</td>
-                <td>@(item.Producto.Modelo + " " + item.Producto.NumeroSerie)</td>
-                <td>@item.FechaEntrega.Value.ToShortDateString()</td>
-                <td>@(item.Estado==true?"Asignado":"Liberado")</td>
-                <td>
-                    <input type="button" data-id="@item.Id" data-estado="@item.Estado" class="btn btn-success btn CambiarEstado" value="Cambiar Estado" />
-                </td>
-            </tr>
+
+            if (item.SucursalProductoEvidencia.Any(x => x.SucursalProductoId == item.Id && x.Tipo == "P"))
+            {
+                nombreFoto = item.SucursalProductoEvidencia.Where(x => x.SucursalProductoId == item.Id && x.Tipo == "P").FirstOrDefault().NombreArchivo;
+            }
+            else
+            {
+                nombreFoto = "#";
+            }
+
+
+        <tr>
+            <td>@item.Sucursal.Descripcion</td>
+            <td>@(item.Producto.Modelo + " " + item.Producto.NumeroSerie)</td>
+            <td>@item.FechaEntrega.Value.ToShortDateString()</td>
+            <td>@(item.Estado==true?"Asignado":"Liberado")</td>
+            <td>
+                <button data-id="@item.Id" data-estado="@item.Estado" class="btn btn-warning btnEditarAsignacionSucursal" title="Editar">
+                    Editar
+                </button>
+
+            </td>
+
+            <td>
+
+                <button data-id="@item.Id" data-estado="@item.Estado" class="btn btn-success btnCambiarEstado" title="Cambiar Estado">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z" />
+                    </svg>
+                </button>
+                @if (nombreFoto != "#")
+                {
+                    @Html.ActionLink("Foto", "DownloadFile", new { fileName = nombreFoto }, new { @class = "btn btn-primary" })
+                }
+
+            </td>
+        </tr>
 
         }
 
@@ -38,13 +72,13 @@
 
     function loadTable() {
 
-        var table = $('#tbPersonaProducto').DataTable({
+        var table = $('#tbSucursalProducto').DataTable({
             lengthChange: false,
-            buttons:['copy','excel','pdf','colvis']
+            buttons: ['copy', 'excel', 'pdf', 'print']
         });
 
         table.buttons().container()
-            .insertBefore('#tbPersonaProducto_filter');
+            .insertBefore('#tbSucursalProducto_filter');
 
     }
 

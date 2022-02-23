@@ -1,6 +1,7 @@
 ﻿using DEVICE.Web.Models;
 using DEVICE.Web.Repos;
 using DEVICE.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
         //    return View();
         //}
 
-
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var listado = new RegistroEquipoViewModel();
@@ -28,6 +29,7 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
             listado.ListadoProcesador = await ProcesadorRepo.ObtenerProcesador();
             listado.ListadoProcesadorGeneracion = await ProcesadorGeneracionRepo.ObtenerProcesadorGeneracion();
             listado.ListadoProcesadorVelocidad = await ProcesadorVelocidadRepo.ObtenerProcesadorVelocidad();
+            listado.ListadoTipoDD = await TipoDDRepo.ObtenerTipoDD();
 
             return View(listado);
         }
@@ -36,12 +38,11 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
         public async Task<IActionResult> Index([FromBody] Producto producto)
         {
             string exito = String.Empty;
+            //bool exito = true;
             if (producto.Id <= 0)
                 exito = await ProductoRepo.RegistrarProducto(producto);
             else
                 exito = await ProductoRepo.ActualizarProducto(producto);
-
-
                 return Json(exito);
 
         }
@@ -52,6 +53,7 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
             listado.ListadoProducto = await ProductoRepo.ObtenerProducto();
             listado.ListadoTipoProducto = await TipoProductoRepo.ObtenerTipoProducto();
             listado.ListadoFabricante = await FabricanteRepo.ObtenerFabricante();
+            listado.ListadoProcesador = await ProcesadorRepo.ObtenerProcesador();
             return PartialView(listado);
         }
 

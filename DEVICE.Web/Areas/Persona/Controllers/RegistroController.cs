@@ -1,4 +1,6 @@
 ﻿using DEVICE.Web.Repos;
+using DEVICE.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,14 +12,32 @@ namespace DEVICE.Web.Areas.Persona.Controllers
     [Area(nameof(Persona))]
     public class RegistroController : Controller
     {
-        public IActionResult Index()
+
+        
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var listado = new RegistroUsuarioViewModel();
+            listado.ListadoPersona = await PersonaRepo.ObtenerPersona();
+            listado.ListadoDepartamento = await DepartamentoRepo.ObtenerDepartamento();
+            listado.ListadoSucursal = await SucursalRepo.ObtenerSucursal();
+            return View(listado);
+
+            //var departamentoVM = new RegistroPersonaViewModel()
+            //{
+            //    ListadoDepartamento = await DepartamentoRepo.ObtenerDepartamento()
+            //};
+            //return View(departamentoVM);
+
         }
 
         public async Task<IActionResult> Listado()
         {
-            var listado = await PersonaRepo.ObtenerPersona();
+            //var listado = await PersonaRepo.ObtenerPersona();
+            //return PartialView(listado);
+            var listado = new RegistroUsuarioViewModel();
+            listado.ListadoPersona = await PersonaRepo.ObtenerPersona();
+            listado.ListadoDepartamento = await DepartamentoRepo.ObtenerDepartamento();
+            listado.ListadoSucursal = await SucursalRepo.ObtenerSucursal();
             return PartialView(listado);
         }
 

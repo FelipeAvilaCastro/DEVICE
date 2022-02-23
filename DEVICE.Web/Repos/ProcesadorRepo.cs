@@ -18,7 +18,7 @@ namespace DEVICE.Web.Repos
         public static async Task<IEnumerable<Procesador>> ObtenerProcesador()
         {
             using var data = new DeviceDBContext();
-            return await data.Procesador.ToListAsync();
+            return await data.Procesador.OrderBy(z => z.Descripcion).ToListAsync();
         }
 
 

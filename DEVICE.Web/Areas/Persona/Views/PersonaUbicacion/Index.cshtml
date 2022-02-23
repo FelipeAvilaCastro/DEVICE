@@ -1,0 +1,168 @@
+﻿@using DEVICE.Web.ViewModels
+@model PersonaUbicacionViewModel
+
+@{
+    ViewData["Title"] = "Asignacion de Usuario Ubicacion";
+}
+
+
+<button id="btnNuevo" class="btn btn-primary">Nuevo</button>
+<!-- Modal -->
+<div id="modalPersonaUbicacion" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Asignacion de Usuario Ubicacion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Usuario</label>
+                            @*<input type="text" class="form-control" id="txtEquipo" placeholder="Seleccione la persona a asignar">*@
+                            <select id="cboUsuario" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoPersona)
+                                {
+                                    <option value="@item.Id">@(item.Nombres + " " + item.Paterno)</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDUsuario" value="-1" />
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Ubicacion</label>
+                            @*<input type="text" class="form-control" id="txtPersona" placeholder="Seleccione la persona a asignar">*@
+                            <select id="cboUbicacion" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoUbicacion)
+                                {
+                                    <option value="@item.ID">@item.Descripcion</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDUbicacion" value="-1" />
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label for="inputCity">Fecha de Ubicacion</label>
+                            <input type="date" class="form-control" id="txtFechaUbicacion">
+                        </div>
+
+                    </div>
+
+                    @*<div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Sucursal</label>
+                            <select id="cboSucursal" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoSucursal)
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDSucursal" value="-1" />
+                        </div>
+
+                    </div>*@
+
+
+                    @*<div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="inputCity">Observacion</label>
+                                <input type="text" class="form-control" id="txtObservacion">
+                            </div>
+
+                        </div>*@
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarUsuarioUbicacion">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div id="divListadoPersonaUbicacion">
+
+</div>
+
+<script src="~/lib/moment.js/moment.js"></script>
+
+<script>
+
+    function LimpiarControles() {
+        $("#cboUsuario").val(-1);
+        $("#cboUbicacion").val(-1);
+        $("#txtFechaUbicacion").val("");
+
+    }
+
+    $("#btnNuevo").click(function () {
+        LimpiarControles();
+        $("#modalPersonaUbicacion").modal();
+    });
+
+    CargarPersonaUbicacion()
+    function CargarPersonaUbicacion() {
+        //alert(baseUrl);
+        $.ajax({
+            type: "GET",
+            url: "/Persona/PersonaUbicacion/Listado",
+            cache: false,
+            success: function (dataHtml) {
+                $("#divListadoPersonaUbicacion").html(dataHtml);
+            }
+        });
+    }
+
+    $("#btnGuardarUsuarioUbicacion").click(function () {
+        let vIDUsuario = $("#hidIDUsuario").val();
+        let vUsuario = $("#cboUsuario").val();
+        let vUbicacion = $("#cboUbicacion").val();
+        let vFechaUbicacion = $("#txtFechaUbicacion").val();
+        var dateFechaUbicacion = (new Date(vFechaUbicacion)).toUTCString();
+        //alert(vUsuario)
+        //alert(vUbicacion)
+        //alert(vSucursal)
+
+
+        var objPersonaUbicacion = JSON.stringify({
+            ID: (vIDUsuario == -1 ? 0 : vIDUsuario),
+            PersonaID: vUsuario,
+            UbicacionID: vUbicacion,
+            FechaUbicacion: dateFechaUbicacion,
+        });
+
+        var dataType = 'application/json; charset=utf-8';
+        $.ajax({
+            type: 'POST',
+            url: '/Persona/PersonaUbicacion/Guardar',
+            /*?*/
+            /*cache: false,*/
+            /*contentType: false,*/
+            dataType: 'json',
+            contentType: dataType,
+            /*processData: false,*/
+            data: objPersonaUbicacion,
+            success: function (exito) {
+                if (exito) {
+                    swal("Good job!", "Se registró satisfactoriamente", "success")
+                    $("#modalPersonaUbicacion").modal("toggle");
+                    LimpiarControles();
+                    CargarPersonaUbicacion();
+                } else {
+                    swal("Ocurrió un error en la transacción")
+                }
+            }
+        });
+    });
+
+
+</script>

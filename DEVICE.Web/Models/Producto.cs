@@ -33,6 +33,10 @@ namespace DEVICE.Web.Models
         public string Password { get; set; }
         public string Ssidnombre { get; set; }
         public string Ssidpassword { get; set; }
+        public string NombreEquipo { get; set; }
+        public int? TipoDDID { get; set; }
+        public int? CapacidadDD { get; set; }
+        public DateTime? FechaLimiteGarantia { get; set; }
 
         public virtual Fabricante Fabricante { get; set; }
         public virtual Procesador Procesador { get; set; }

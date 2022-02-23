@@ -27,6 +27,20 @@ namespace DEVICE.Web.Repos
             return query;
         }
 
+
+        public static async Task<Producto> ObtenerProductoPorProductoLicenciaID(int productoLicenciaID)
+        {
+            using var data = new DeviceDBContext();
+
+            var query = await (from p in data.Producto
+                               join pl in data.ProductoLicencia on p.Id equals pl.ProductoId
+                               where pl.Id == productoLicenciaID
+                               select p).FirstOrDefaultAsync();
+            return query;
+        }
+
+
+
         public static async Task<IEnumerable<Producto>> ObtenerProductoDisponible()
         {
             using var data = new DeviceDBContext();
@@ -39,10 +53,17 @@ namespace DEVICE.Web.Repos
             return await data.Producto.FromSqlRaw("SP_GET_PRODUCTODISPONIBLESUCURSAL").ToListAsync();
         }
 
+        public static async Task<IEnumerable<Producto>> ObtenerLicenciaDisponible()
+        {
+            using var data = new DeviceDBContext();
+            return await data.Producto.FromSqlRaw("SP_GET_LICENCIADISPONIBLE").ToListAsync();
+        }
+
+
         public static async Task<IEnumerable<Producto>> ObtenerProducto()
         {
             using var data = new DeviceDBContext();
-            return await data.Producto.Where(x => x.Estado == "AC").ToListAsync();
+            return await data.Producto.Include("TipoProducto").Where(x => x.Estado == "AC").ToListAsync();
         }
 
         public static async Task<Producto> ObtenerProductoPorID(int id)
@@ -62,13 +83,17 @@ namespace DEVICE.Web.Repos
                 bool resultado = await ValidarNumeroSerie(producto.NumeroSerie,null);
                 if (resultado)
                     return "El número de serie ya se encuentra registrado.";
+                //si es que capturo impresoras sin numero de serie no validarla ?
+
 
                 producto.Estado = "AC";
                 producto.SistemaOperativoId = (producto.SistemaOperativoId == -1 ? null : producto.SistemaOperativoId);
                 producto.FabricanteId = (producto.FabricanteId == -1 ? null : producto.FabricanteId);
-                producto.ProcesadorId = (producto.ProcesadorId == -1 ? null : producto.ProcesadorId);
+                producto.ProcesadorId = (producto.ProcesadorId == -1 ? 4 : producto.ProcesadorId);
                 producto.ProcesadorGeneracionId = (producto.ProcesadorGeneracionId == -1 ? null : producto.ProcesadorGeneracionId);
                 producto.ProcesadorVelocidadId = (producto.ProcesadorVelocidadId == -1 ? null : producto.ProcesadorVelocidadId);
+                producto.TipoDDID = (producto.TipoDDID == -1 ? null : producto.TipoDDID);
+                producto.CapacidadDD = (producto.CapacidadDD == -1 ? null : producto.CapacidadDD);
                 data.Producto.Add(producto);
                 await data.SaveChangesAsync();
             }
@@ -154,6 +179,10 @@ namespace DEVICE.Web.Repos
                 productoActual.Ssidnombre = producto.Ssidnombre;
                 productoActual.Ssidpassword = producto.Ssidpassword;
 
+                productoActual.NombreEquipo = producto.NombreEquipo;
+                productoActual.TipoDDID = producto.TipoDDID;
+                productoActual.CapacidadDD = producto.CapacidadDD;
+                productoActual.FechaLimiteGarantia = producto.FechaLimiteGarantia;
                 await data.SaveChangesAsync();
             }
             catch

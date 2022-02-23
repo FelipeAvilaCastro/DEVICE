@@ -13,5 +13,7 @@ namespace DEVICE.Web.ViewModels
         public IEnumerable<Fabricante> ListadoFabricante { get; set; }
 
         public IEnumerable<TipoProducto> ListadoTipoProducto { get; set; }
+        
+        public IEnumerable<Procesador> ListadoProcesador { get; set; }
     }
 }

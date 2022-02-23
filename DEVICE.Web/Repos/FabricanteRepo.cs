@@ -18,7 +18,7 @@ namespace DEVICE.Web.Repos
         public static async Task<IEnumerable<Fabricante>> ObtenerFabricante()
         {
             using var data = new DeviceDBContext();
-            return await data.Fabricante.Where(x => x.Estado == true).ToListAsync();
+            return await data.Fabricante.OrderBy(z => z.Descripcion).Where(x => x.Estado == true).ToListAsync();
         }
 
 

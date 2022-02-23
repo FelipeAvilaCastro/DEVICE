@@ -19,7 +19,7 @@ namespace DEVICE.Web.Repos
         public static async Task<IEnumerable<SistemaOperativo>> ObtenerSistemaOperativo()
         {
             using var data = new DeviceDBContext();
-            return await data.SistemaOperativo.ToListAsync();
+            return await data.SistemaOperativo.OrderBy(z => z.Descripcion).ToListAsync();
         }
 
     }

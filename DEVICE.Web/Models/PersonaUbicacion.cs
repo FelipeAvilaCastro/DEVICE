@@ -11,7 +11,6 @@ namespace DEVICE.Web.Models
         public int? PersonaId { get; set; }
         public int? UbicacionId { get; set; }
         public DateTime? FechaUbicacion { get; set; }
-
         public virtual Persona Persona { get; set; }
         public virtual Ubicacion Ubicacion { get; set; }
     }

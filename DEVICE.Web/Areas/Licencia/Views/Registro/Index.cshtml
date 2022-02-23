@@ -1,7 +1,14 @@
 ﻿@using DEVICE.Web.ViewModels
 @model RegistroLicenciaViewModel
 
-<button id="btnNuevo" class="btn btn-success">Nuevo</button>
+@{
+    ViewData["Title"] = "Registro de Licencias";
+}
+
+
+<div>
+    <button id="btnNuevo" class="btn btn-success">Nuevo</button>
+</div>
 <!-- Modal -->
 <div id="modalLicencia" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -18,57 +25,61 @@
                         <div class="form-group col-md-4">
                             <label for="inputEmail4">Software</label>
                             @*<input type="text" class="form-control" id="txtEquipo" placeholder="Seleccione la persona a asignar">*@
- 
-                            <select id="cboSoftware" class="form-control">
+
+                            <select name="SoftwareId" id="cboSoftware" class="form-control">
                                 <option value="-1">--SELECCIONE--</option>
                                 @foreach (var item in Model.ListadoSoftware)
                                 {
                                     <option value="@item.Id">@item.Descripcion</option>
                                 }
                             </select>
-                            <input type="hidden" id="hidIDSoftware" value="-1" />
+
+                            <input type="hidden" id="hidIDLicencia" value="-1" />
                         </div>
 
                         <div class="form-group col-md-4">
                             <label for="inputPassword4">Modulo</label>
                             @*<input type="text" class="form-control" id="txtPersona" placeholder="Seleccione la persona a asignar">*@
-                            <select id="cboSoftwareModulo" class="form-control">
+
+                            <select name="SoftwareID" id="cboSoftwareModulo" class="form-control">
                                 <option value="-1">--SELECCIONE--</option>
                                 @foreach (var item in Model.ListadoSoftwareModulo)
                                 {
                                     <option value="@item.Id">@item.Descripcion</option>
                                 }
                             </select>
-                            <input type="hidden" id="hidIDSoftwareModulo" value="-1" />
+                            @*<input type="hidden" id="hidIDSoftwareModulo" value="-1" />*@
 
                         </div>
 
                         <div class="form-group col-md-4">
                             <label for="inputPassword4">Version</label>
                             @*<input type="text" class="form-control" id="txtPersona" placeholder="Seleccione la persona a asignar">*@
-                            <select id="cboSoftwareVersion" class="form-control">
+                            <select name="SoftwareModuloID" id="cboSoftwareVersion" class="form-control">
                                 <option value="-1">--SELECCIONE--</option>
                                 @foreach (var item in Model.ListadoSoftwareVersion)
                                 {
                                     <option value="@item.Id">@item.Descripcion</option>
                                 }
                             </select>
-                            <input type="hidden" id="hidIDSoftwareVersion" value="-1" />
+                            @*<input type="hidden" id="hidIDSoftwareVersion" value="-1" />*@
 
                         </div>
 
                     </div>
 
                     <div class="form-row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-8">
                             <label for="inputCity">Licencia Tarjeta</label>
-                            <input type="text" class="form-control" id="txtLicTarjeta">
+                            <input name="NumeroLicenciaTarjeta" type="text" class="form-control" id="txtLicTarjeta" placeholder="Agregue Clave">
 
                         </div>
+                    </div>
 
-                        <div class="form-group col-md-4">
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
                             <label for="inputCity">Licencia Web</label>
-                            <input type="text" class="form-control" id="txtLicWeb">
+                            <input name="NumeroLicenciaWeb" type="text" class="form-control" id="txtLicWeb">
                         </div>
 
                         <div class="form-group col-md-4">
@@ -77,15 +88,31 @@
                         </div>
                     </div>
 
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputCorreo">Correo de Configuracion</label>
+                            <select name="CorreoID" id="cboCorreo" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoCorreo)
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            </select>
+                            @*<input type="hidden" id="hidIDSoftwareVersion" value="-1" />*@
+
+                        </div>
+
+                    </div>
 
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <label for="inputCity">Comentario</label>
-                            <input type="text" class="form-control" id="txtComentario">
+                            @*<input type="hidden" id="hidIDLicencia" value="-1" />*@
+                            <input name="Comentario" type="text" class="form-control" id="txtComentario">
                         </div>
 
                     </div>
-                   
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -96,14 +123,17 @@
     </div>
 </div>
 
+<hr />
 
 <div id="divListadoLicencia">
 
 </div>
 
+<script src="~/lib/moment.js/moment.js"></script>
+
 <script>
-    CargarProductos()
-    function CargarProductos() {
+    CargarLicencias()
+    function CargarLicencias() {
         //alert(baseUrl);
         $.ajax({
             type: "GET",
@@ -115,37 +145,52 @@
         });
     }
 
+    function limpiarControles() {
+        $("#hidIDProducto").val(-1);
+        $("#cboSoftware").val(-1);
+        $("#cboSoftwareModulo").val(-1);
+        $("#cboSoftwareVersion").val(-1);
+        $("#txtLicTarjeta").val("");
+        $("#txtLicWeb").val("");
+        $("#txtFechaVencimiento").val("");
+        $("#cboCorreo").val(-1);
+        $("#txtComentario").val("");
+
+    }
+
+
     $("#btnNuevo").click(function () {
         $("#modalLicencia").modal();
     });
 
 
-    $("#btnGuardarLicencia").click(function () {  
-        let vIDSoftware = $("#hidIDSoftware").val();
+    $("#btnGuardarLicencia").click(function () {
+        let vIdLicencia = $("#hidIDLicencia").val();
+        /*alert(vIdLicencia);*/
         let vSoftwareID = $("#cboSoftware").val();
-
         let vSoftwareModuloID = $("#cboSoftwareModulo").val();
-        alert(vSoftwareModuloID);
         let vSoftwareVersionID = $("#cboSoftwareVersion").val();
 
         let vLicTarjeta = $("#txtLicTarjeta").val();
-
         let vLicWeb = $("#txtLicWeb").val();
-
         let vFechaVencimiento = $("#txtFechaVencimiento").val();
+        let vCorreoID = $("#cboCorreo").val();
+
         let vComentario = $("#txtComentario").val();
-       
+
         var objLicencia = JSON.stringify({
-            IDSoftware: vIDSoftware,
+            ID: (vIdLicencia == -1 ? 0 : vIdLicencia),
+            /*IDSoftware: vIDSoftware,*/
             SoftwareID: vSoftwareID,
             SoftwareModuloID: vSoftwareModuloID,
             SoftwareVersionID: vSoftwareVersionID,
             NumeroLicenciaTarjeta: vLicTarjeta,
             NumeroLicenciaWeb: vLicWeb,
             FechaVencimiento: vFechaVencimiento,
+            CorreoID: vCorreoID,
             Comentario: vComentario
-            
         });
+
         var dataType = 'application/json; charset=utf-8';
         $.ajax({
             type: 'POST',
@@ -156,17 +201,89 @@
             success: function (exito) {
                 if (exito) {
                     swal("Good job!", "Se registró satisfactoriamente", "success")
-                    /*alert('REgistro exito');*/
-                    //CargarProductos();
-                    //limpiarControles();
                     $("#modalLicencia").modal("toggle");
-
+                    CargarLicencias();
+                    limpiarcontroles();
                 } else {
                     swal("Ocurrió un error en la transacción")
                 }
             }
         });
     });
+
+
+    $("#divListadoLicencia").on('click', '.btnEliminarLicencia', function () {
+        let vIdLicencia = $(this).attr('data-id');
+        swal({
+            title: "Eliminar",
+            text: "¿Estas seguro que quieres eliminar la licencia?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Yes, delete it!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/Licencia/Registro/Eliminar',
+                        data: { id: vIdLicencia },
+                        cache: false,
+                        success: function (exito) {
+                            if (exito) {
+                                swal("La Licencia fue eliminada exitosamente.");
+                                CargarLicencias();
+                                limpiarcontroles();
+                            } else {
+                                swal("Ocurrió un error en la transacción");
+                            }
+                        }
+                    });
+                }
+                swal("Cancelado!", "No se Elimino la Licencia", "success");
+            });
+
+    });
+
+
+    $("#divListadoLicencia").on('click', '.btnEditarLicencia', function () {
+        let modalRegistro = $("#modalLicencia");
+        let vIdLicencia = $(this).attr('data-id');
+
+        $("#hidIDLicencia").val(vIdLicencia);
+
+        $.ajax({
+            type: "GET",
+            url: "/Licencia/Registro/Obtener",
+            data: { id: vIdLicencia },
+            cache: false,
+            success: function (objLicencia) {
+                console.log(objLicencia);
+                limpiarControles();
+
+                /*alert("hola");*/
+
+                $('#hidIDLicencia').val(objLicencia.id);
+                $('#cboSoftware').val(objLicencia.softwareId);
+                $('#cboSoftwareModulo').val(objLicencia.softwareModuloId);
+                $('#cboSoftwareVersion').val(objLicencia.softwareVersionId);
+                $('#txtLicTarjeta').val(objLicencia.numeroLicenciaTarjeta);
+                $('#txtLicWeb').val(objLicencia.numeroLicenciaWeb);
+                let fechaVec = moment(objLicencia.fechaVencimiento).format('YYYY-MM-DD');
+                document.getElementById('txtFechaVencimiento').value = fechaVec;
+                $('#cboCorreo').val(objLicencia.correoId);
+                $('#txtComentario').val(objLicencia.comentario);
+                modalRegistro.modal()
+
+                $("#modalLicencia").modal("toggle");
+
+            }
+        });
+    });
+
+
 
 
 

@@ -1,229 +1,285 @@
-﻿@{
-    ViewData["Title"] = "Registro de Personas";
+﻿@model DEVICE.Web.ViewModels.RegistroUsuarioViewModel
+@*@model DEVICE.Web.ViewModels.RegistroUbicacionDepartamentoViewModel*@
+@{
+    ViewData["Title"] = "Registro de Usuarios";
 }
 
 <div>
-    <button id="btnNuevo" class="btn btn-success">Nuevo</button>
+    <button id="btnNuevo" class="btn btn-primary">Nuevo</button>
 </div>
 
 
 
-
 <!-- Modal -->
-<div class="modal fade" id="modalRegistroPersona"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Registro Personas</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-row">
-                            <div class="form-group col-md-3">
-                                <label for="inputEmail4">Apellido Paterno</label>
-                                <input type="hidden" id="hidIDUsuario" value="-1" />
-                                <input type="text" name="" class="form-control" id="txtAppPat" placeholder="">
-                                <input type="hidden" />
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label for="inputPassword4">Apellido Materno</label>
-                                <input type="text" class="form-control" id="txtAppMat" placeholder="">
-                                <input type="hidden" />
+<div class="modal fade" id="modalRegistroPersona" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Registro Usuarios</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="inputEmail4">Apellido Paterno</label>
+                            <input type="hidden" id="hidIDUsuario" value="-1" />
+                            <input type="text" name="" class="form-control" id="txtAppPat" placeholder="">
+                            
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputPassword4">Apellido Materno</label>
+                            <input type="text" class="form-control" id="txtAppMat" placeholder="">
+                            
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputPassword4">Nombres</label>
+                            <input type="text" class="form-control" id="txtNombres" placeholder="">
+                            <input type="hidden" />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="inputEmail4">Clave</label>
+                            <input type="text" name="" class="form-control" id="txtClave" placeholder="">
+                        </div>
+                    </div>
 
-                            </div>
 
-                            <div class="form-group col-md-6">
-                                <label for="inputPassword4">Nombres</label>
-                                <input type="text" class="form-control" id="txtNombres" placeholder="">
-                                <input type="hidden" />
-
-                            </div>
-
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Usuario</label>
+                            <input type="text" class="form-control" id="txtUsuario" placeholder="">
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group col-md-3">
-                                <label for="inputCity">Usuario</label>
-                                <input type="text" class="form-control" id="txtUsuario" placeholder="">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label for="inputCity">Password</label>
-                                <input type="password" class="form-control" id="txtPassword" placeholder="">
-                            </div>
-
-
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Password</label>
+                            <input type="password" class="form-control" id="txtPassword" placeholder="">
                         </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="inputCity">Puesto</label>
-                                <input type="text" class="form-control" id="txtPuesto" name="">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="inputCity">Telefono</label>
-                                <input type="tel" class="form-control" id="txtTelefono" name="">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="inputCity">Correo</label>
-                                <input type="email" class="form-control" id="txtCorreo" name="">
-                            </div>
 
+
+                    </div>
+
+
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputPassword4">Departamento</label>
+                            <select name="DepartamentoID" id="cboDepartamento" class="form-control">
+                                <option selected value="-1">---SELECCIONE---</option>
+                                @foreach (var item in Model.ListadoDepartamento)
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            </select>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="btnGuardarPersona">Guardar</button>
-                </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Puesto</label>
+                            <input type="text" class="form-control" id="txtPuesto" name="">
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="inputEmail4">Sucursal</label>
+                            <select id="cboSucursal" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoSucursal)
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDSucursal" value="-1" />
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Telefono</label>
+                            <input type="tel" class="form-control" id="txtTelefono" name="">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">Correo</label>
+                            <input type="email" class="form-control" id="txtCorreo" name="">
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarPersona">Guardar</button>
             </div>
         </div>
     </div>
+</div>
 
-    <hr />
-
-
-    <div id="divListadoPersona">
-
-    </div>
+<hr />
 
 
-    <script>
-        $("#btnNuevo").click(function () {
-            limpiarControles();
-            $("#modalRegistroPersona").modal();
+<div id="divListadoPersona">
+
+</div>
+
+
+<script>
+    $("#btnNuevo").click(function () {
+        limpiarControles();
+        $("#modalRegistroPersona").modal();
+    });
+
+
+
+    function limpiarControles() {
+        $("#hidIDUsuario").val(-1);
+        $("#txtAppPat").val("");
+        $("#txtAppMat").val("");
+        $("#txtNombres").val("");
+        $("#txtClave").val("");
+        $("#txtUsuario").val("");
+        $("#txtPassword").val("");
+        $("#cboDepartamento").val(-1);
+        $("#txtPuesto").val("");
+        $("#cboSucursal").val(-1);
+        $("#txtTelefono").val("");
+        $("#txtCorreo").val("");
+
+    }
+
+    CargarPersona()
+    function CargarPersona() {
+        //alert(baseUrl);
+        $.ajax({
+            type: "GET",
+            url: "/Persona/Registro/Listado",
+            cache: false,
+            success: function (dataHtml) {
+                $("#divListadoPersona").html(dataHtml);
+                //$("#divListadoEmpresa #tbEmpresa").DataTable();
+            }
         });
+    }
 
+    $("#btnGuardarPersona").click(function () {
+        let vIDUsuario = $("#hidIDUsuario").val();
+        let vAppPat = $("#txtAppPat").val();
+        let vAppMat = $("#txtAppMat").val();
+        let vNombres = $("#txtNombres").val();
+        let vClave = $("#txtClave").val();
+        let vUsuario = $("#txtUsuario").val();
+        let vPassword = $("#txtPassword").val();
+        let vDepartamentoID = $("#cboDepartamento").val()
+        let vPuesto = $("#txtPuesto").val();
+        let vSucursalID = $("#cboSucursal").val()
+        let vTelefono = $("#txtTelefono").val();
+        let vCorreo = $("#txtCorreo").val();
 
+        var objProducto = JSON.stringify({
+            ID: (vIDUsuario == -1 ? 0 : vIDUsuario),
+            Paterno: vAppPat,
+            Materno: vAppMat,
+            Nombres: vNombres,
+            Clave: vClave,
+            Usuario: vUsuario,
+            Password: vPassword,
+            DepartamentoID: vDepartamentoID,
+            Puesto: vPuesto,
+            SucursalID: vSucursalID,
+            Telefono: vTelefono,
+            Correo: vCorreo
 
-        function limpiarControles() {
-            $("#hidIDUsuario").val(-1);
-            $("#txtAppPat").val("");
-            $("#txtAppMat").val("");
-            $("#txtNombres").val("");
-            $("#txtUsuario").val("");
-            $("#txtPassword").val("");
-            $("#txtPuesto").val("");
-            $("#txtTelefono").val("");
-            $("#txtCorreo").val("");
-
-        }
-
-        CargarPersona()
-        function CargarPersona() {
-            //alert(baseUrl);
-            $.ajax({
-                type: "GET",
-                url: "/Persona/Registro/Listado",
-                cache: false,
-                success: function (dataHtml) {
-                    $("#divListadoPersona").html(dataHtml);
-                    //$("#divListadoEmpresa #tbEmpresa").DataTable();
-                }
-            });
-        }
-
-        $("#btnGuardarPersona").click(function () {
-            let vIDUsuario = $("#hidIDUsuario").val();
-            let vAppPat = $("#txtAppPat").val();
-            let vAppMat = $("#txtAppMat").val();
-            let vNombres = $("#txtNombres").val();
-            let vUsuario = $("#txtUsuario").val();
-            let vPassword = $("#txtPassword").val();
-            let vPuesto = $("#txtPuesto").val();
-            let vTelefono = $("#txtTelefono").val();
-            let vCorreo = $("#txtCorreo").val();
-
-            var objProducto = JSON.stringify({
-                ID: (vIDUsuario == -1 ? 0 : vIDUsuario),
-                Paterno: vAppPat,
-                Materno: vAppMat,
-                Nombres: vNombres,
-                Usuario: vUsuario,
-                Password: vPassword,
-                Puesto: vPuesto,
-                Telefono: vTelefono,
-                Correo: vCorreo
-
-            });
-            var dataType = 'application/json; charset=utf-8';
-            $.ajax({
-                type: 'POST',
-                url: '/Persona/Registro/Index',
-                dataType: 'json',
-                contentType: dataType,
-                data: objProducto,
-                success: function (exito) {
-                    if (exito) {
-                        swal("Good job!", "El usuario Se registró satisfactoriamente", "success")
-                        CargarPersona();
-                        limpiarControles();
-                        $("#modalPersona").modal("toggle");
-
-                    } else {
-                        swal("Ocurrió un error en la transacción")
-                    }
-                }
-            });
         });
-
-
-        $("#divListadoPersona").on('click', '.btnEliminarProducto', function () {
-            let vIdPersona = $(this).attr('data-id');
-            //swal({
-            //    title: "Eliminar",
-            //    text: "Your will not be able to recover this imaginary file!",
-            //    type: "warning",
-            //    showCancelButton: true,
-            //    confirmButtonClass: "btn-danger",
-            //    confirmButtonText: "Yes, delete it!",
-            //    closeOnConfirm: false
-            //},
-            //    function () {
-            //        swal("Deleted!", "Your imaginary file has been deleted.", "success");
-            //    });
-            $.ajax({
-                type: "POST",
-                url: '/Persona/Registro/Eliminar',
-                data: { id: vIdPersona },
-                cache: false,
-                success: function (exito) {
-                    if (exito) {
-                        swal("La Persona fue eliminada exitosamente.");
-                        CargarPersona();
-                        /*limpiarControles();*/
-                    } else {
-                        swal("Ocurrió un error en la transacción");
-                    }
-                }
-            });
-        });
-
-
-        $("#divListadoPersona").on('click', '.btnEditarProducto', function () {
-            let modalRegistro = $("#modalRegistroPersona");
-            let vIdPersona = $(this).attr('data-id');
-            $("#hidIDProducto").val(vIdPersona);
-            $.ajax({
-                type: "GET",
-                url: "/Persona/Registro/Obtener",
-                data: { id: vIdPersona },
-                cache: false,
-                success: function (objPersona) {
-                    console.log(objPersona);
+        var dataType = 'application/json; charset=utf-8';
+        $.ajax({
+            type: 'POST',
+            url: '/Persona/Registro/Index',
+            dataType: 'json',
+            contentType: dataType,
+            data: objProducto,
+            success: function (exito) {
+                if (exito) {
+                    swal("Good job!", "El usuario Se registró satisfactoriamente", "success")
+                    CargarPersona();
                     limpiarControles();
-                    $("#hidIDUsuario").val(objPersona.id);
-                    $("#txtAppPat").val(objPersona.paterno);
-                    $("#txtAppMat").val(objPersona.materno);
-                    $("#txtNombres").val(objPersona.nombres);
-                    $("#txtUsuario").val(objPersona.usuario);
-                    $("#txtPassword").val(objPersona.password);
-                    $("#txtPuesto").val(objPersona.puesto);
-                    $("#txtTelefono").val(objPersona.telefono);
-                    $("#txtCorreo").val(objPersona.correo);
-                    modalRegistro.modal()
+                    $("#modalRegistroPersona").modal("toggle");
+
+                } else {
+                    swal("Ocurrió un error en la transacción")
                 }
-            });
+            }
         });
-    </script>
+    });
+
+
+    $("#divListadoPersona").on('click', '.btnEliminarProducto', function () {
+        let vIdPersona = $(this).attr('data-id');
+        swal({
+            title: "Eliminar",
+            text: "¿Estas seguro que deseas Eliminar al Usuario?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "si, deseo Eliminar a Usuario!",
+            closeOnConfirm: false,
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/Persona/Registro/Eliminar',
+                        data: { id: vIdPersona },
+                        cache: false,
+                        success: function (exito) {
+                            if (exito) {
+                                swal("La Persona fue eliminada exitosamente.");
+                                CargarPersona();
+                                /*limpiarControles();*/
+                            } else {
+                                swal("Ocurrió un error en la transacción");
+                            }
+                        }
+                    });
+                } else {
+                    swal("Cancelado", "No se llevo ninguna accion", "success");
+                }
+
+            });
+    });
+
+
+    $("#divListadoPersona").on('click', '.btnEditarProducto', function () {
+        let modalRegistro = $("#modalRegistroPersona");
+        let vIdPersona = $(this).attr('data-id');
+        /* $("#hidIDProducto").val(vIdPersona);*/
+        $.ajax({
+            type: "GET",
+            url: "/Persona/Registro/Obtener",
+            data: { id: vIdPersona },
+            cache: false,
+            success: function (objPersona) {
+                console.log(objPersona);
+                limpiarControles();
+                $("#hidIDUsuario").val(objPersona.id);
+                $("#txtAppPat").val(objPersona.paterno);
+                $("#txtAppMat").val(objPersona.materno);
+                $("#txtNombres").val(objPersona.nombres);
+                $("#txtUsuario").val(objPersona.usuario);
+                $("#txtClave").val(objPersona.clave);
+                $("#txtPassword").val(objPersona.password);
+                $("#cboDepartamento").val(objPersona.departamentoID);
+                $("#txtPuesto").val(objPersona.puesto);
+                $("#cboSucursal").val(objPersona.sucursalID);
+                $("#txtTelefono").val(objPersona.telefono);
+                $("#txtCorreo").val(objPersona.correo);
+
+
+
+
+                modalRegistro.modal()
+            }
+        });
+    });
+</script>

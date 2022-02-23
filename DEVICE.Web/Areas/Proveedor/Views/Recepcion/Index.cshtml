@@ -1,0 +1,329 @@
+﻿@model DEVICE.Web.ViewModels.RegistroDocumentoViewModel
+
+@{
+    ViewData["Title"] = "Registro de Factura";
+}
+
+<div>
+    <button id="btnNuevo" class="btn btn-primary">Nuevo</button>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalRecepcion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Registro Factura</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+
+                    <div class="form-row">
+
+                        <div class="form-group col-md-3">
+                            <label for="inputRD">RD</label>
+                            <input type="hidden" id="hidID" value="-1" />
+                            <input type="text" name="RD" class="form-control" id="txtNoRD" placeholder="">
+
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label for="inputDocumento">Documento</label>
+                            <input type="hidden" id="hidIDDocumento" value="-1" />
+                            <input type="text" name="Documento" class="form-control" id="txtDocumento" placeholder="">
+                            <input type="hidden" />
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label for="inputFechaDocumento">Fecha Documento</label>
+                            <input type="hidden" id="hidFechaDocumento" value="-1" />
+                            <input type="date" name="FechaDocumento" class="form-control" id="txtFechaDocumento" placeholder="">
+                            <input type="hidden" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputProveedor">Proveedor</label>
+                            <select name="Proveedor" id="cboProveedor" class="form-control">
+                                <option selected value="-1">---SELECCIONE---</option>
+                                @foreach (var item in Model.ListadoProveedor)
+                                {
+                                    <option value="@item.Id">@item.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="inputEmail4">Observaciones</label>
+                            <input type="hidden" id="hidObservaciones" value="-1" />
+                            <input type="text" name="Observaciones" class="form-control" id="txtObservaciones" rows="3" placeholder="Favor de Agregar Observaciones">
+                            
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" id="btnGuardarEncabezado">Guardar</button>
+                    </div>
+
+                    <hr />
+
+                    <div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputProveedor">Tipo Producto</label>
+                                <select name="Proveedor" id="cboProducto" class="form-control">
+                                    <option selected value="-1">---SELECCIONE---</option>
+                                    @foreach (var item in Model.ListadoTipoProducto)
+                                    {
+                                        <option value="@item.Id">@item.Descripcion</option>
+
+                                        
+                                    }
+                                </select>
+                                <input type="text" class="form-control" id="textCantidad" />
+                                <button type="button" class="btn btn-primary" id="btnTraeData">Guardar</button>
+                            </div>
+                        </div>
+
+
+                        <table id="tbListadoProductos" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th hidden scope="col">ID</th>
+                                    <th scope="col">Tipo Producto</th>
+                                    <th scope="col">Cantidad</th>
+                                    <th scope="col">No.Parte</th>
+                                    <th scope="col">Descripcion</th>
+                                    <th scope="col">PrecioU</th>
+                                    <th scope="col">Importe</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @*<tr>
+                                        <td hidden scope="row"></td>
+                                        <td>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <button id="btnEditarProducto"
+                                                    class="btnEditarProducto btn btn-warning"
+                                                    data-id="">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                                </svg>
+                                            </button>
+
+                                            <button id="btnEliminarProducto"
+                                                    class="btnEliminarProducto btn btn-danger"
+                                                    data-id="">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                                </svg>
+                                            </button>
+
+                                            <div class="modal-footer">
+
+                                                <button type="button" class="btn btn-primary" id="btnGuardarDetalle">Guardar</button>
+                                            </div>
+
+
+                                        </td>
+                                    </tr>*@
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/lib/moment.js/moment.js"></script>
+
+
+<div id="divListadoDocumentos">
+
+</div>
+
+
+
+
+<script>
+    $("#btnNuevo").click(function () {
+        /*limpiarControles();*/
+        $("#modalRecepcion").modal();
+    });
+
+
+    function limpiarControles() {
+        $("#hidID").val(-1);
+        $("#txtNoRD").val("");
+        $("#txtDocumento").val("");
+        $("#txtFechaDocumento").val("");
+        $("#cboProveedor").val(-1);
+        $("#txtObservaciones").val("");
+    }
+
+    $("#btnGuardarEncabezado").click(function () {
+        let vID = $("#hidID").val();
+        alert(vID)
+        let vNoRD = $("#txtNoRD").val();
+        let vDocumento = $("#txtDocumento").val();
+        let vFechaDocumento = $("#txtFechaDocumento").val();
+        var dateFechaDocumento = vFechaDocumento;
+
+        let vProveedor = $("#cboProveedor").val();
+        let vObservaciones = $("#txtObservaciones").val();
+
+        var objEncabezado = JSON.stringify({
+            ID: (vID == -1 ? 0 : vID),
+            RD: vNoRD,
+            DocumentoEnabezado: vDocumento,
+            FechaDocumento: dateFechaDocumento,
+            ProveedorID: vProveedor,
+            Observaciones: vObservaciones
+
+        });
+
+        var dataType = 'application/json; charset=utf-8';
+        $.ajax({
+            type: 'POST',
+            url: '/Proveedor/Recepcion/GrabarEncabezado',
+            dataType: 'json',
+            contentType: dataType,
+            data: objEncabezado,
+
+            success: function (exito) {
+
+                if (exito) {
+                    /*swal("Good job!", "Se registró satisfactoriamente", "success")*/
+                    /*$("#modalRegistroEncabezado").modal("toggle");*/
+                    /*CargarDetalle();*/
+
+                } else {
+                    swal("Ocurrió un error en la transacción")
+                }
+            }
+        });
+    });
+
+
+    $("#btnGuardarDetalle").click(function () {
+        let vID = $("#hidID").val();
+        alert(vID)
+        let vNoRD = $("#txtNoRD").val();
+        let vDocumento = $("#txtDocumento").val();
+        let vFechaDocumento = $("#txtFechaDocumento").val();
+        var dateFechaDocumento = vFechaDocumento;
+
+        let vProveedor = $("#cboProveedor").val();
+        let vObservaciones = $("#txtObservaciones").val();
+
+        var objEncabezado = JSON.stringify({
+            ID: (vID == -1 ? 0 : vID),
+            RD: vNoRD,
+            DocumentoEnabezado: vDocumento,
+            FechaDocumento: dateFechaDocumento,
+            ProveedorID: vProveedor,
+            Observaciones: vObservaciones
+
+        });
+
+        var dataType = 'application/json; charset=utf-8';
+        $.ajax({
+            type: 'POST',
+            url: '/Proveedor/Recepcion/GrabarEncabezado',
+            dataType: 'json',
+            contentType: dataType,
+            data: objEncabezado,
+
+            success: function (exito) {
+
+                if (exito) {
+                    swal("Good job!", "Se registró satisfactoriamente", "success")
+                    /*$("#modalRegistroEncabezado").modal("toggle");*/
+                    /*CargarDetalle();*/
+
+                } else {
+                    swal("Ocurrió un error en la transacción")
+                }
+            }
+        });
+    });
+
+
+    CargarDocumentos()
+    function CargarDocumentos() {
+        //alert(baseUrl);
+        $.ajax({
+            type: "GET",
+            url: "/Proveedor/Recepcion/Listado",
+            cache: false,
+            success: function (dataHtml) {
+                $("#divListadoDocumentos").html(dataHtml);
+            }
+        });
+    }
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        // Handle the form submit event, and make the Ajax request:
+        $("#cboProducto").change(function () {
+            /* event.preventDefault();*/
+            if ($("#cboProducto").val() == "-1" || $("#textCantidad").val() == "") {
+                alert("debe seleccionar producto o ingresar cantidad");
+                return;
+            }
+            $.ajax({
+                url: "/Proveedor/recepcion/JsonProducto",
+                type: "post",
+                data: { idProducto: $("#cboProducto").val() },
+                success: function (data) {
+                    var cantidad = $("#textCantidad").val();
+                    var resultado = parseFloat(data.precio) * parseInt(cantidad);
+                    var $data = $('#tbListadoProductos');
+                    var $row = $('<tr />');
+                    var tabla = document.getElementById("tbListadoProductos");;
+                    $row.append($('<td/>').html(data.producto));
+                    $row.append($('<td/>').html(cantidad));
+                    $row.append($('<td/>').html(data.parte));
+                    $row.append($('<td/>').html(data.descripcion));
+                    $row.append($('<td/>').html(data.precio));
+                    $row.append($('<td/>').html(resultado));
+                    /*   $row.append($('<td/>').html("jfnjfnfj"));*/
+                    $data.append($row);
+                    var total = 0;
+                    for (var i = 1; tabla.rows[i]; i++) {
+                        total += Number(tabla.rows[i].cells[4].innerHTML);
+                    }
+                }
+            });
+
+
+            //$("#msg").html(total);
+            //$("#codigo").val("");
+            //$("#cantidad").val("");
+            //$("#codigo").focus();
+        });
+    });
+</script>

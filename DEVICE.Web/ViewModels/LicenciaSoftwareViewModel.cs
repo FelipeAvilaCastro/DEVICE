@@ -10,7 +10,6 @@ namespace DEVICE.Web.ViewModels
     {
 
         public IEnumerable<Licencia> ListadoLicencia { get; set; }
-
         public IEnumerable<Software> ListadoSoftware { get; set; }
         public IEnumerable<SoftwareModulo> ListadoSoftwareModulo { get; set; }
         public IEnumerable<SoftwareVersion> ListadoSoftwareVersion { get; set; }

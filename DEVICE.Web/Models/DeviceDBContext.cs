@@ -17,11 +17,17 @@ namespace DEVICE.Web.Models
         {
         }
 
+        public virtual DbSet<Ciudad> Ciudad { get; set; }
+        public virtual DbSet<Clasificacion> Clasificacion { get; set; }
+        public virtual DbSet<Correo> Correo { get; set; }
         public virtual DbSet<Departamento> Departamento { get; set; }
         public virtual DbSet<Documento> Documento { get; set; }
         public virtual DbSet<DocumentoDetalle> DocumentoDetalle { get; set; }
+        public virtual DbSet<Estado> Estado { get; set; }
         public virtual DbSet<Fabricante> Fabricante { get; set; }
         public virtual DbSet<Licencia> Licencia { get; set; }
+        public virtual DbSet<Pais> Pais { get; set; }
+        public virtual DbSet<Parte> Parte { get; set; }
         public virtual DbSet<Persona> Persona { get; set; }
         public virtual DbSet<PersonaProducto> PersonaProducto { get; set; }
         public virtual DbSet<PersonaProductoEvidencia> PersonaProductoEvidencia { get; set; }
@@ -31,6 +37,7 @@ namespace DEVICE.Web.Models
         public virtual DbSet<ProcesadorVelocidad> ProcesadorVelocidad { get; set; }
         public virtual DbSet<Producto> Producto { get; set; }
         public virtual DbSet<ProductoLicencia> ProductoLicencia { get; set; }
+        public virtual DbSet<ProductoLicenciaEvidencia> ProductoLicenciaEvidencia { get; set; }
         public virtual DbSet<Proveedor> Proveedor { get; set; }
         public virtual DbSet<SistemaOperativo> SistemaOperativo { get; set; }
         public virtual DbSet<Software> Software { get; set; }
@@ -40,6 +47,7 @@ namespace DEVICE.Web.Models
         public virtual DbSet<SucursalDepartamento> SucursalDepartamento { get; set; }
         public virtual DbSet<SucursalProducto> SucursalProducto { get; set; }
         public virtual DbSet<SucursalProductoEvidencia> SucursalProductoEvidencia { get; set; }
+        public virtual DbSet<TipoDD> TipoDD { get; set; }
         public virtual DbSet<TipoProducto> TipoProducto { get; set; }
         public virtual DbSet<Ubicacion> Ubicacion { get; set; }
         public virtual DbSet<Zona> Zona { get; set; }
@@ -49,8 +57,14 @@ namespace DEVICE.Web.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=LAPTOP-SOPORTE;Database=DeviceDB;Trusted_Connection=true;MultipleActiveResultSets=true");
-                //optionsBuilder.UseSqlServer("Server=192.168.17.30\\SQLEXPRESS;Database=DeviceDB;User=qbo;Pwd=qbo2021");
+
+                optionsBuilder.UseSqlServer("Server=LAPTOP-SOPORTE\\SQLSERVER;Database=DeviceDB;Trusted_Connection=true;MultipleActiveResultSets=true;User=sa;Pwd=SQLServer");
+                //optionsBuilder.UseSqlServer("Server=DBCRIOPUEBLA\\SQLEXPRESS;Database=DeviceDB;Trusted_Connection=true;MultipleActiveResultSets=true;User=sa;Pwd=SQLServer01");
+
+
+                //optionsBuilder.UseSqlServer("Server=192.168.17.85;Database=DeviceDB;User=sa;Pwd=SQLServer");
+                //optionsBuilder.UseSqlServer("Server=SERVER-SOPTEC\\SQLEXPRESS;Database=DeviceDB;User=sa;Pwd=SQLServer");
+
 
             }
         }
@@ -58,6 +72,38 @@ namespace DEVICE.Web.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Modern_Spanish_CI_AS");
+
+           
+            modelBuilder.Entity<Clasificacion>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Descripcion).HasMaxLength(100);
+
+            });
+
+
+
+            modelBuilder.Entity<Ciudad>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Descripcion).HasMaxLength(150);
+
+            });
+
+
+            modelBuilder.Entity<Correo>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Descripcion).HasMaxLength(200);
+
+                entity.Property(e => e.Password).HasMaxLength(50);
+
+                
+            });
+
 
             modelBuilder.Entity<Departamento>(entity =>
             {
@@ -70,13 +116,14 @@ namespace DEVICE.Web.Models
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.Descripcion).HasMaxLength(100);
+                entity.Property(e => e.DocumentoEncabezado).HasMaxLength(50);
 
-                entity.Property(e => e.FechaEntrega).HasColumnType("datetime");
-
-                entity.Property(e => e.MontoTotal).HasColumnType("decimal(9, 2)");
+                entity.Property(e => e.FechaDocumento).HasColumnType("date");
 
                 entity.Property(e => e.ProveedorId).HasColumnName("ProveedorID");
+
+                entity.Property(e => e.Observaciones).HasMaxLength(2000);
+                entity.Property(e => e.Status).HasMaxLength(100);
 
                 entity.HasOne(d => d.Proveedor)
                     .WithMany(p => p.Documento)
@@ -103,6 +150,16 @@ namespace DEVICE.Web.Models
                     .HasConstraintName("FK_DocumentoDetalle_Producto");
             });
 
+
+            modelBuilder.Entity<Estado>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Descripcion).HasMaxLength(150);
+
+            });
+
+
             modelBuilder.Entity<Fabricante>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -125,13 +182,40 @@ namespace DEVICE.Web.Models
                 entity.Property(e => e.NumeroLicenciaTarjeta).HasMaxLength(100);
                 
                 entity.Property(e => e.NumeroLicenciaWeb).HasMaxLength(100);
-                
+
+                entity.Property(e => e.CorreoId).HasColumnName("CorreoID");
+
                 entity.Property(e => e.Comentario).HasMaxLength(1000);
 
                 entity.HasOne(d => d.Software)
                     .WithMany(p => p.Licencia)
                     .HasForeignKey(d => d.SoftwareId)
                     .HasConstraintName("FK_Licencia_Software");
+            });
+
+
+            modelBuilder.Entity<Pais>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Descripcion).HasMaxLength(150);
+            });
+
+
+            modelBuilder.Entity<Parte>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.NoParte).HasColumnName("NoParte");
+
+                entity.Property(e => e.Descripcion).HasMaxLength(1000);
+
+                entity.Property(e => e.Entradas).HasColumnName("Entradas");
+
+                entity.Property(e => e.Salidas).HasColumnName("Salidas");
+
+                entity.Property(e => e.Stock).HasColumnName("Stock");
+
             });
 
             modelBuilder.Entity<Persona>(entity =>
@@ -144,9 +228,14 @@ namespace DEVICE.Web.Models
 
                 entity.Property(e => e.Materno).HasMaxLength(100);
 
-                entity.Property(e => e.Nombres).HasMaxLength(100);
+                entity.Property(e => e.Nombres).HasMaxLength(10);
+
+                entity.Property(e => e.Clave).HasMaxLength(100);
 
                 entity.Property(e => e.Password).HasMaxLength(200);
+
+                entity.Property(e => e.DepartamentoID).HasColumnName("DepartamentoID");
+                entity.Property(e => e.SucursalID).HasColumnName("SucursalID");
 
                 entity.Property(e => e.Paterno)
                     .IsRequired()
@@ -168,6 +257,8 @@ namespace DEVICE.Web.Models
                 entity.Property(e => e.FechaEntrega).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaProximaCambio).HasColumnType("datetime");
+                
+                entity.Property(e => e.ClasificacionId).HasColumnName("ClasificacionID");
 
                 entity.Property(e => e.Comentario).HasMaxLength(2000);
 
@@ -223,6 +314,7 @@ namespace DEVICE.Web.Models
                     .WithMany(p => p.PersonaUbicacion)
                     .HasForeignKey(d => d.UbicacionId)
                     .HasConstraintName("FK_PersonaUbicacion_Ubicacion");
+
             });
 
             modelBuilder.Entity<Procesador>(entity =>
@@ -334,17 +426,69 @@ namespace DEVICE.Web.Models
                     .HasConstraintName("FK_ProductoLicencia_Producto");
             });
 
+
+            modelBuilder.Entity<ProductoLicenciaEvidencia>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.FechaArchivo).HasColumnType("datetime");
+
+                entity.Property(e => e.NombreArchivo).HasMaxLength(200);
+
+                entity.Property(e => e.ProductoLicenciaId).HasColumnName("ProductoLicenciaID");
+
+                entity.Property(e => e.Tipo).HasMaxLength(50);
+
+    //            entity.HasOne(d => d.ProductoLicencia)
+    //.WithMany(p => p.ProductoLicenciaEvidencia)
+    //.HasForeignKey(d => d.ProductoLicenciaId)
+    //.HasConstraintName("FK_ProductoLicenciaEvidencia_ProductoLicencia");
+
+            });
+
+
+
+
+
             modelBuilder.Entity<Proveedor>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.Contacto).HasMaxLength(100);
-
-                entity.Property(e => e.Descripcion).HasMaxLength(100);
+                entity.Property(e => e.Nombre).HasMaxLength(150);
+                
+                entity.Property(e => e.RFC).HasMaxLength(50);
+               
+                entity.Property(e => e.RazonSocial).HasMaxLength(100);
 
                 entity.Property(e => e.Direccion).HasMaxLength(100);
 
+                entity.Property(e => e.Colonia).HasMaxLength(100);
+
+                
+                entity.Property(e => e.PaisID).HasColumnName("PaisID");
+
+                entity.Property(e => e.EstadoID).HasColumnName("EstadoID");
+
+                entity.Property(e => e.CiudadID).HasColumnName("CiudadID");
+
+
+                entity.Property(e => e.CodigoPostal).HasMaxLength(100);
+
+                entity.Property(e => e.Email).HasMaxLength(100);
+
+                entity.Property(e => e.SitioWeb).HasMaxLength(100);
+
+                entity.Property(e => e.Contacto).HasMaxLength(100);
+
                 entity.Property(e => e.Telefono).HasMaxLength(100);
+
+                entity.Property(e => e.Observacion).HasMaxLength(100);
+
+                entity.Property(e => e.UsuarioRegistro).HasMaxLength(150);
+                
+                entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
+
+                entity.Property(e => e.Status).HasMaxLength(100);
             });
 
             modelBuilder.Entity<SistemaOperativo>(entity =>
@@ -439,7 +583,14 @@ namespace DEVICE.Web.Models
                     .HasConstraintName("FK_SucursalProductoEvidencia_SucursalProducto");
             });
 
+            modelBuilder.Entity<TipoDD>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.Descripcion).HasMaxLength(50);
+                
+                //entity.Property(e => e.Status).HasMaxLength(50);
+            });
 
 
             modelBuilder.Entity<TipoProducto>(entity =>
@@ -451,16 +602,10 @@ namespace DEVICE.Web.Models
 
             modelBuilder.Entity<Ubicacion>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.DepartamentoId).HasColumnName("DepartamentoID");
+                entity.Property(e => e.ID).HasColumnName("ID");
 
                 entity.Property(e => e.Descripcion).HasMaxLength(200);
 
-                entity.HasOne(d => d.Departamento)
-                    .WithMany(p => p.Ubicacion)
-                    .HasForeignKey(d => d.DepartamentoId)
-                    .HasConstraintName("FK_Ubicacion_Departamento");
             });
 
             modelBuilder.Entity<Zona>(entity =>

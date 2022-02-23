@@ -1,13 +1,18 @@
 ﻿@using DEVICE.Web.ViewModels
 @model EquipoPersonaViewModel
 
-<button id="btnNuevo" class="btn btn-success">Nuevo</button>
+@{
+    ViewData["Title"] = "Asignacion de Equipos";
+}
+
+
+<button id="btnNuevo" class="btn btn-primary">Nuevo</button>
 <!-- Modal -->
 <div id="modalAsignacionPersona" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Asignacion </h5>
+                <h5 class="modal-title" id="exampleModalLabel">Asignacion de Equipos</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -27,11 +32,11 @@
                                 }
                             </select>
                             <input type="hidden" id="hidIDProducto" value="-1" />
-                            <input type="hidden" id="hidIDPersonaProducto" value="-1" />
+
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="inputPassword4">Persona</label>
+                            <label for="inputPassword4">Usuario</label>
                             @*<input type="text" class="form-control" id="txtPersona" placeholder="Seleccione la persona a asignar">*@
                             <select id="cboPersona" class="form-control">
                                 <option value="-1">--SELECCIONE--</option>
@@ -41,6 +46,7 @@
                                 }
                             </select>
                             <input type="hidden" id="hidIDPersona" value="-1" />
+                            <input type="hidden" id="hidIDPersonaProducto" value="-1" />
 
                         </div>
                     </div>
@@ -54,7 +60,22 @@
                             <label for="inputCity">Fecha Próximo Cambio</label>
                             <input type="date" class="form-control" id="txtFechaProximoCambio">
                         </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="inputCity">Clasificacion</label>
+                            <select id="cboClasificacion" class="form-control">
+                                <option value="-1">--SELECCIONE--</option>
+                                @foreach (var item in Model.ListadoClasificacion)
+                                {
+                                    <option value="@item.Id">@item.Descripcion</option>
+                                }
+                            </select>
+                            <input type="hidden" id="hidIDClasificacion" value="-1" />
+                        </div>
+
                     </div>
+
+
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <label for="inputCity">Comentario</label>
@@ -84,48 +105,42 @@
     </div>
 </div>
 
+<hr />
+
+
+
 <div id="divListadoAsignacionPersona">
-
 </div>
-<script src="~/lib/moment.js/moment.js"></script>
 
+<script src="~/lib/moment.js/moment.js"></script>
 <script>
 
     $("#divListadoAsignacionPersona").on('click', '.btnEditarAsignacionEquipo', function () {
         let vId = $(this).attr('data-id');
         let vFoto = $(this).attr('data-tipo');
-
         let vModal = $("#modalAsignacionPersona");
-
         $("#hidIDPersonaProducto").val(vId);
 
-
-        var promise = $.ajax({
-            type: "POST",
-            url: '/Equipo/AsignacionPersona/ObtenerProductoPorPersonaProductoID',
-            data: { id: vId },
-            cache: false,
-            success: function (objPersonaProducto) {
-                //alert(objPersonaProducto);
-                console.log(objPersonaProducto);
-
-
-                $('#cboEquipo').append($('<option>', {
-                    value: objPersonaProducto.id,
-                    text: objPersonaProducto.modelo + " " + objPersonaProducto.numeroSerie
-                }));
-                $('#cboEquipo').val(objPersonaProducto.id);
-
-                //if (exito) {
-                //    swal("Se actualizo correctamente");
-                //    CargarAsignacion();
-
-                //} else {
-                //    swal("Ocurrió un error en la transacción");
-                //}
+/*Por que utilizamos promise*/
+        var promise = $.ajax(
+            {
+                type: "POST",
+                url: '/Equipo/AsignacionPersona/ObtenerProductoPorPersonaProductoID',
+                data: { id: vId },
+                cache: false,
+                success: function (objPersonaProducto) {
+                    console.log(objPersonaProducto);
+                    $('#cboEquipo').append($('<option>', {
+                        value: objPersonaProducto.id,
+                        text: objPersonaProducto.modelo + " " + objPersonaProducto.numeroSerie
+                    }));
+                    $('#cboEquipo').val(objPersonaProducto.id);
+                    $("#modalAsignacionPersona").modal("toggle");
+                }
             }
-        });
+        );
 
+/*Por que utilizamos promise*/
         promise.then(function () {
             $.ajax({
                 type: "GET",
@@ -136,17 +151,21 @@
                     console.log(objPersona);
                     LimpiarControles();
 
-                    $("#hidIDProducto").val(objPersona.personaId);
-                    $("#hidIDPersona").val(objPersona.productoId);
+                    $("#hidIDProducto").val(objPersona.productoId);
+                    $("#hidIDPersona").val(objPersona.personaId);
                     $("#hidIDPersonaProducto").val(objPersona.id);
+                    $("#hidIDClasificacion").val(objPersona.clasificacionId);
 
                     $("#cboEquipo").val(objPersona.productoId);
                     $("#cboPersona").val(objPersona.personaId);
+                    $("#cboClasificacion").val(objPersona.clasificacionId);
+
 
                     let fechaProx = moment(objPersona.fechaEntrega).format('YYYY-MM-DD');
-                    let fechaProxCambio = moment(objPersona.fechaProximoCambio).format('YYYY-MM-DD');
                     document.getElementById("txtFechaEntrega").value = fechaProx;
-                    document.getElementById("txtFechaProximoCambio").value = fechaProxCambio;
+
+                    let fechaProxCamb = moment(objPersona.fechaProximaCambio).format('YYYY-MM-DD');
+                    document.getElementById("txtFechaProximoCambio").value = fechaProxCamb;
 
                     $("#txtComentario").val(objPersona.comentario);
 
@@ -158,15 +177,14 @@
     });
 
 
-    $("#divListadoAsignacionPersona").on('click', '.btnVerFirma', function () {
-        let vId = $(this).attr('data-id');
-        let vFoto = $(this).attr('data-tipo');
-    });
+    //$("#divListadoAsignacionPersona").on('click', '.btnVerFirma', function () {
+    //    let vId = $(this).attr('data-id');
+    //    let vFoto = $(this).attr('data-tipo');
+    //});
 
     $("#divListadoAsignacionPersona").on('click', '.btnCambiarEstado', function () {
         let vIdAsigPer = $(this).attr('data-id');
         let vEstado = $(this).attr('data-estado');
-
 
         swal({
             title: "Cambio de Estado",
@@ -207,14 +225,12 @@
     });
 
 
-
-
     function LimpiarControles() {
-
         $("#cboEquipo").val(-1);
         $("#cboPersona").val(-1);
         $("#txtFechaEntrega").val("");
         $("#txtFechaProximoCambio").val("");
+        $("#cboClasificacion").val(-1);
         $("#txtComentario").val("");
         $("#txtFirma").val("");
         $("#txtFoto").val("");
@@ -223,6 +239,7 @@
         $("#hidIDPersonaProducto").val(-1);
         $("#txtFirma").val("");
         $("#txtFoto").val("");
+        $("#hidIDClasificacion").val(-1);
 
     }
 
@@ -232,9 +249,6 @@
     //    $('#txtFechaProximoCambio').val()
 
     //});
-
-
-
 
 
     CargarAsignacion()
@@ -262,17 +276,27 @@
         let vIDProducto = $("#hidIDProducto").val();
         let vIDPersona = $("#hidIDPersona").val();
         let vIDPersonaProducto = $("#hidIDPersonaProducto").val();
-
+        let vIDClasificacion = $("#hidIDClasificacion").val();
+        /*alert(vIDClasificacion);*/
         let vEquipo = $("#cboEquipo").val();
-        let vPersona = $("#cboPersona").val();
-        /*alert(vPersona);*/
-        let vFechaEntrega = $("#txtFechaEntrega").val();
-        let vFechaProximoCambio = $("#txtFechaProximoCambio").val();
-        let vComentario = $("#txtComentario").val();
         /*console.log(vEquipo);*/
+        /*alert(vEquipo);*/
+        let vPersona = $("#cboPersona").val();
+        let vClasificacion = $("#cboClasificacion").val();
+        /*alert(vClasificacion);*/
 
-        var dateFechaEntrega = (new Date(vFechaEntrega)).toUTCString();
-        var dateFechaProximoCambio = (new Date(vFechaProximoCambio)).toUTCString();
+        let vFechaEntrega = $("#txtFechaEntrega").val();
+    /*alert(vFechaEntrega);*/
+        let vFechaProximoCambio = $("#txtFechaProximoCambio").val();
+
+        let vComentario = $("#txtComentario").val();
+
+        //var dateFechaEntrega = (new Date(vFechaEntrega)).toUTCString();
+        var dateFechaEntrega = vFechaEntrega;
+        /*alert(dateFechaEntrega);*/
+        /* var dateFechaProximoCambio = (new Date(vFechaProximoCambio)).toUTCString();*/
+        var dateFechaProximoCambio = vFechaProximoCambio;
+
 
         let vFirmaUpload = $("#txtFirma").get(0);
         let vFotoUpload = $("#txtFoto").get(0);
@@ -280,17 +304,20 @@
         let files2 = vFotoUpload.files;
         /*alert("files: " + $("#txtFirma").val() + " files2: " + $("#txtFoto").val());*/
         let vData = new FormData();
+
         //return false;
+
         vData.append('vTieneFirma', $("#txtFirma").val() == "" ? false : true);
         vData.append('vTieneFoto', $("#txtFoto").val() == "" ? false : true);
-
         vData.append('vIDProducto', vIDProducto);
         vData.append('vIDPersona', vIDPersona);
         vData.append('vIDPersonaProducto', vIDPersonaProducto);
+        vData.append('vIDClasificacion', vIDClasificacion);
         vData.append('vEquipo', vEquipo);
         vData.append('vPersona', vPersona);
         vData.append('vFechaEntrega', dateFechaEntrega);
         vData.append('vFechaProximoCambio', dateFechaProximoCambio);
+        vData.append('vClasificacion', vClasificacion);
         vData.append('vComentario', vComentario);
 
 
@@ -300,6 +327,8 @@
         for (var i = 0; i < files2.length; i++) {
             vData.append(files2[i].name, files2[i]);
         }
+
+
         $.ajax({
             type: 'POST',
             url: '/Equipo/AsignacionPersona/Grabar',

@@ -14,5 +14,6 @@ namespace DEVICE.Web.ViewModels
         public IEnumerable<Procesador> ListadoProcesador { get; set; }
         public IEnumerable<ProcesadorGeneracion> ListadoProcesadorGeneracion { get; set; }
         public IEnumerable<ProcesadorVelocidad> ListadoProcesadorVelocidad { get; set; }
+        public IEnumerable<TipoDD> ListadoTipoDD { get; set; }
     }
 }

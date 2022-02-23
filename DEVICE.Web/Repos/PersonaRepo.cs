@@ -13,7 +13,7 @@ namespace DEVICE.Web.Repos
         public static async Task<IEnumerable<Persona>> ObtenerPersona()
         {
             using var data = new DeviceDBContext();
-            return await data.Persona.Where(x => x.Estado == true).ToListAsync();
+            return await data.Persona.OrderBy(z=> z.Usuario).Where(x => x.Estado == true).ToListAsync();
         }
 
 
@@ -78,8 +78,11 @@ namespace DEVICE.Web.Repos
                 personaActual.Materno = persona.Materno;
                 personaActual.Nombres = persona.Nombres;
                 personaActual.Usuario = persona.Usuario;
+                personaActual.Clave = persona.Clave;
                 personaActual.Password = persona.Password;
+                personaActual.DepartamentoID = persona.DepartamentoID;
                 personaActual.Puesto = persona.Puesto;
+                personaActual.SucursalID = persona.SucursalID;
                 personaActual.Telefono = persona.Telefono;
                 personaActual.Correo = persona.Correo;
 

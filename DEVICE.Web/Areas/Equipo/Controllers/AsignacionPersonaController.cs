@@ -45,7 +45,8 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
             var equipopersonaVM = new EquipoPersonaViewModel()
             {
                 ListadoPersona = await PersonaRepo.ObtenerPersona(),
-                ListadoProducto = await ProductoRepo.ObtenerProductoDisponible()
+                ListadoProducto = await ProductoRepo.ObtenerProductoDisponible(),
+                ListadoClasificacion = await ClasificacionRepo.ObtenerClasificacion()
 
             };
 
@@ -54,7 +55,7 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
 
         public async Task<IActionResult> Listado()
         {
-            var listado = await PersonaProductoRepo.ObtenerPersonaProducto();
+            var listado = await PersonaProductoRepo.ObtenerPersonaProducto(); 
             return PartialView(listado);
         }
 
@@ -64,7 +65,6 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
             bool exito = true;
             try
             {
-
                 bool tieneFirma = Convert.ToBoolean(Request.Form.Where(x => x.Key == "vTieneFirma").FirstOrDefault().Value);
                 bool tieneFoto = Convert.ToBoolean(Request.Form.Where(x => x.Key == "vTieneFoto").FirstOrDefault().Value);
 
@@ -75,10 +75,12 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
                 DateTime fechaEntrega = Convert.ToDateTime(Request.Form["vFechaEntrega"]).Date;
                 DateTime fechaProximoCambio = Convert.ToDateTime(Request.Form["vFechaProximoCambio"]).Date;
                 string comentario = Request.Form.Where(x => x.Key == "vComentario").FirstOrDefault().Value;
+                int idclasificacion = Convert.ToInt32(Request.Form.Where(x => x.Key == "vClasificacion").FirstOrDefault().Value);
 
-
-                var fileFirma = (dynamic)null;//Request.Form.Files.Count == 0 ? null : Request.Form.Files[0];
+                var fileFirma = (dynamic)null;  //Request.Form.Files.Count == 0 ? null : Request.Form.Files[0];
                 var fileFoto = (dynamic)null;   //Request.Form.Files.Count == 0 ? null : Request.Form.Files[1];
+                
+                
                 if (tieneFirma && tieneFoto)
                 {
                     fileFirma = Request.Form.Files[0];
@@ -104,6 +106,7 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
                     FechaProximaCambio = fechaProximoCambio,
                     FechaEntrega = fechaEntrega,
                     Comentario = comentario,
+                    ClasificacionId = idclasificacion,
                     Estado = true
                 };
 
@@ -117,6 +120,8 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
 
                 if (!exito)
                     return Json(false);
+
+
 
                 var evidenciaFirma = new PersonaProductoEvidencia();
                 var evidenciaFoto = new PersonaProductoEvidencia();
@@ -213,6 +218,8 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
                 exito = false;
             }
 
+            //llamar metodo para correo 
+
             return Json(exito);
         }
 
@@ -225,18 +232,27 @@ namespace DEVICE.Web.Areas.Equipo.Controllers
 
         }
 
-        public async Task<IActionResult> Obtener(int id)
-        {
-            var producto = await PersonaProductoRepo.ObtenerPersonaProductoPorID(id);
-            return Json(producto);
-        }
+
         public async Task<IActionResult> ObtenerProductoPorPersonaProductoID(int id)
         {
             var producto = await ProductoRepo.ObtenerProductoPorPersonaProductoID(id);
             return Json(producto);
         }
 
-        
+
+        public async Task<IActionResult> ObtenerClasificacionPorPersonaProductoID(int id)
+        {
+            var clasificacion = await ClasificacionRepo.ObtenerClasificacionPorPersonaProductoID(id);
+            return Json(clasificacion);
+        }
+
+
+        public async Task<IActionResult> Obtener(int id)
+        {
+            var producto = await PersonaProductoRepo.ObtenerPersonaProductoPorID(id);
+            return Json(producto);
+        }
+
 
         public FileResult DownloadFile(string fileName)
         {

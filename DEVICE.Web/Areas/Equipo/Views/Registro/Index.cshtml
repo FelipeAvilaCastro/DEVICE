@@ -4,7 +4,7 @@
 }
 
 <div>
-    <button id="btnNuevo" class="btn btn-success">Nuevo</button>
+    <button id="btnNuevo" class="btn btn-primary">Nuevo</button>
 </div>
 
 <!-- Modal -->
@@ -12,14 +12,14 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Registro de Productos</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Registro de Equipos</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-row">
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-4">
                         <label for="inputPassword4">Tipo</label>
                         <select name="TipoProductoID" id="cboTipoProducto" class="form-control">
                             <option selected value="-1">---SELECCIONE---</option>
@@ -30,28 +30,6 @@
                         </select>
                     </div>
 
-                    <div class="form-group col-md-5" id="divNumeroSerie">
-                        <label for="inputEmail4">N° Serie</label>
-                        <input type="text" name="NumeroSerie" class="form-control" id="txtNroSerie" placeholder="Ingrese el número de serie">
-                    </div>
-                    <div class="form-group col-md-5" id="divNumeroProducto">
-                        <label for="inputEmail4">N° Producto</label>
-                        <input type="text" name="NumeroProducto" class="form-control" id="txtNroProducto" placeholder="Ingrese el número de producto">
-                    </div>
-
-
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-9" id="divModeloSistema">
-                        <label for="inputEmail4">Modelo</label>
-                        <input type="text" name="Modelo" class="form-control" id="txtModeloSistema" placeholder="Ingrese el Modelo">
-                    </div>
-                </div>
-
-
-
-
-                <div class="form-row">
                     <div class="form-group col-md-4">
                         <label for="inputEmail4">Fabricante</label>
                         <select name="FabricanteID" id="cboFabricante" class="form-control">
@@ -62,28 +40,23 @@
                             }
                         </select>
                     </div>
-                    <div class="form-group col-md-4" id="divSistemaOperativo">
-                        <label for="inputEmail4">Sistema Operativo</label>
-                        <select name="SistemaOperativoID" id="cboSistemaOperativo" class="form-control">
-                            <option selected value="-1">---SELECCIONE---</option>
-                            @foreach (var item in Model.ListadoSistemaOperativo)
-                            {
-                                <option value="@item.Id">@item.Descripcion</option>
-                            }
-                        </select>
+
+                    <div class="form-group col-md-4" id="divNumeroProducto">
+                        <label for="inputEmail4">N° Producto</label>
+                        <input type="text" name="NumeroProducto" class="form-control" id="txtNroProducto" placeholder="Ingrese el número de producto">
                     </div>
-                    <div class="form-group col-md-4" id="divMemoriaRam">
-                        <label for="inputEmail4">Memoria RAM</label>
-                        <select name="MemoriaRam" id="cboMemoriaRam" class="form-control">
-                            <option selected value="-1">---SELECCIONE---</option>
-                            @for (int i = 4; i <= 32; i += 2)
-                            {
-                                <option value="@i">@(i + "GB")</option>
-                            }
-                        </select>
+
+
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-8" id="divNombreEquipo">
+                        <label for="inputEmail4">Nombre de Equipo</label>
+                        <input type="text" name="NombreEquipo" class="form-control" id="txtNombreEquipo" placeholder="Ingrese el Nombre de Equipo">
                     </div>
 
                 </div>
+
                 <div class="form-row">
                     <div class="form-group col-md-4" id="divProcesador">
                         <label for="inputEmail4">Procesador</label>
@@ -97,7 +70,7 @@
 
                     </div>
                     <div class="form-group col-md-4" id="divProGenVel">
-                        <label for="inputEmail4">Generacion</label>
+                        <label for="inputGeneracion">Generacion</label>
                         <select name="ProcesadorGeneracionID" id="cboProcesadorGeneracion" class="form-control">
                             <option selected value="-1">---SELECCIONE---</option>
                             @foreach (var item in Model.ListadoProcesadorGeneracion)
@@ -106,7 +79,7 @@
                             }
                         </select>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-4" id="divVelocidad">
                         <label for="inputEmail4">Velocidad</label>
                         <select name="ProcesadorVelocidadID" id="cboProcesadorVelocidad" class="form-control">
                             <option selected value="-1">---SELECCIONE---</option>
@@ -118,21 +91,104 @@
                     </div>
                 </div>
 
+
                 <div class="form-row">
-                    <div class="form-group col-md-12">
+
+                    <div class="form-group col-md-4" id="divMemoriaRam">
+                        <label for="inputEmail4">Memoria RAM</label>
+                        <select name="MemoriaRam" id="cboMemoriaRam" class="form-control">
+                            <option selected value="-1">---SELECCIONE---</option>
+                            @for (int i = 4; i <= 32; i += 2)
+                            {
+                                <option value="@i">@(i + "GB")</option>
+                            }
+                        </select>
+                    </div>
+
+
+                    <div class="form-group col-md-4" id="divSistemaOperativo">
+                        <label for="inputEmail4">Sistema Operativo</label>
+                        <select name="SistemaOperativoID" id="cboSistemaOperativo" class="form-control">
+                            <option selected value="-1">---SELECCIONE---</option>
+                            @foreach (var item in Model.ListadoSistemaOperativo)
+                            {
+                                <option value="@item.Id">@item.Descripcion</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4" id="divNumeroSerie">
+                        <label for="inputEmail4">N° Serie</label>
+                        <input type="text" name="NumeroSerie" class="form-control" id="txtNroSerie" placeholder="Ingrese el número de serie">
+                    </div>
+
+
+                </div>
+
+
+                <div class="form-row">
+                    <div class="form-group col-md-8" id="divModeloSistema">
+                        <label for="inputEmail4">Modelo</label>
+                        <input type="text" name="Modelo" class="form-control" id="txtModeloSistema" placeholder="Ingrese el Modelo">
+                    </div>
+
+                </div>
+
+                <div id="divTipoCapacidadDD" class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="inputEmail4">Tipo DD</label>
+                        <select name="TipoDDID" id="cboTipoDD" class="form-control">
+                            <option selected value="-1">---SELECCIONE---</option>
+                            @foreach (var item in Model.ListadoTipoDD)
+                            {
+                                <option value="@item.Id">@item.Descripcion</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label for="inputEmail4">Capacidad DD</label>
+                        <select name="CapacidadDD" id="cboCapacidadDD" class="form-control">
+                            <option selected value="-1">---SELECCIONE---</option>
+                            @for (int i = 256; i <= 3036; i *= 2)
+                            {
+                                <option value="@i">@(i + " GB")</option>
+                            }
+                        </select>
+
+
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label for="inputCity">Fecha Limite Garantia</label>
+                        <input type="date" class="form-control" id="txtFechaLimiteGarantia">
+                    </div>
+
+
+                </div>
+
+
+
+
+
+                <div class="form-row">
+                    <div class="form-group col-md-8">
                         <label for="inputEmail4">Comentarios</label>
                         <input type="hidden" id="hidIDProducto" value="-1" />
                         <input type="text" name="Comentario" class="form-control" id="txtDescripcion" placeholder="Comentario">
                         @*<textarea name="Comentario" class="form-control" id="txtDescripcion" cols="40" rows="3"></textarea>*@
                     </div>
-                </div>
 
-                <div id="divIP" class="form-row" style="display:none">
-                    <div class="form-group col-md-4">
-                        <label for="inputEmail4">IP</label>
-                        <input type="text" name="IP" class="form-control" id="txtIP" placeholder="Ingrese la dirección IP">
+
+                    <div id="divIP" class="form-row" style="display:none">
+                        <div class="form-group col-md-12">
+                            <label for="inputEmail4">IP</label>
+                            <input type="text" name="IP" class="form-control" id="txtIP" placeholder="Ingrese la dirección IP">
+                        </div>
                     </div>
                 </div>
+
+
 
                 <div id="divUsePas" class="form-row" style="display:none">
 
@@ -188,6 +244,7 @@
 
 </div>
 
+<script src="~/lib/moment.js/moment.js"></script>
 
 
 <script>
@@ -201,12 +258,14 @@
         $("#hidIDProducto").val(-1);
         $("#txtDescripcion").val("");
         //$("#cboTipoProducto").val(-1);
-        $("#txtNroSerie").val("");
+        $("#cboFabricante").val(-1);
         $("#txtNroProducto").val("");
+        $("#txtNombreEquipo").val("");
+        $("#txtNroSerie").val("");
         $("#cboMemoriaRam").val(-1);
         $("#txtModeloSistema").val("");
         $("#cboSistemaOperativo").val(-1);
-        $("#cboFabricante").val(-1);
+ 
         $("#cboProcesador").val(-1);
         $("#cboProcesadorGeneracion").val(-1);
         $("#cboProcesadorVelocidad").val(-1);
@@ -215,7 +274,13 @@
         $("#txtPasswordIP").val("");
         $("#txtSSIDNombre").val("");
         $("#txtSSIDPassword").val("");
+        $("#txtNombreEquipo").val("");
+
+        $("#cboTipoDD").val(-1);
+        $("#cboCapacidadDD").val(-1);
+        $("#txtFechaLimiteGarantia").val("");
     }
+
     $('#cboTipoProducto').on('change', function () {
         //1	Desktop	True	    1
         //2	Laptop	True	    1
@@ -223,9 +288,11 @@
         //4	Cámara	True	    3
         //5	Servidores	True	1
         //6	Fortinet	True	4
-        //7	TP - Link	True	5
+        //7	TP-Link	True	    5
         //8	Handheld	True	6
-        //9	Otros	True	6
+        //9 switch
+        //10 DVR
+        //11	Otros	True	6
         /*  limpiarControles();*/
         let idTipoProducto = $(this).val();
         visualizarCampos(idTipoProducto);
@@ -247,17 +314,22 @@
                 $('#divProcesador').removeAttr('style');
                 $('#divProGenVel').removeAttr('style');
                 $('#divMemoriaRam').removeAttr('style');
+                $('#divVelocidad').removeAttr('style');
+                $('#divTipoCapacidadDD').removeAttr('style');
                 break;
             case "3":
                 $('#divIP').removeAttr('style');
                 $('#divUsePas').removeAttr('style');
                 $('#divSSID').css('display', 'none')
-                $('#divNumeroSerie').css('display', 'none')
+                $('#divNombreEquipo').css('display', 'none')
+                $('#divNumeroSerie').removeAttr('style');
                 $('#divNumeroProducto').css('display', 'none')
                 $('#divSistemaOperativo').css('display', 'none')
                 $('#divProcesador').css('display', 'none')
                 $('#divProGenVel').css('display', 'none')
                 $('#divMemoriaRam').css('display', 'none')
+                $('#divVelocidad').css('display', 'none')
+                $('#divTipoCapacidadDD').css('display', 'none')
                 break;
             case "4":
             case "8":
@@ -270,6 +342,8 @@
                 $('#divProcesador').css('display', 'none')
                 $('#divProGenVel').css('display', 'none')
                 $('#divMemoriaRam').css('display', 'none')
+                $('#divVelocidad').css('display', 'none')
+                $('#divTipoCapacidadDD').css('display', 'none')
                 break;
             case "5":
                 $('#divIP').removeAttr('style');
@@ -281,6 +355,7 @@
                 $('#divProcesador').removeAttr('style');
                 $('#divProGenVel').removeAttr('style');
                 $('#divMemoriaRam').removeAttr('style');
+                $('#divTipoCapacidadDD').removeAttr('style');
                 break;
             case "6":
                 $('#divIP').removeAttr('style');
@@ -292,8 +367,11 @@
                 $('#divProcesador').css('display', 'none')
                 $('#divProGenVel').css('display', 'none')
                 $('#divMemoriaRam').css('display', 'none')
+                $('#divVelocidad').css('display', 'none')
+                $('#divTipoCapacidadDD').css('display', 'none')
                 break;
             case "7":
+            case "12":
                 //$('#divIP').addClass('visible').removeClass('invisible');
                 //$('#divUsePas').addClass('visible').removeClass('invisible');
                 //$('#divSSID').addClass('visible').removeClass('invisible');
@@ -313,10 +391,22 @@
                 $('#divProcesador').css('display', 'none');
                 $('#divProGenVel').css('display', 'none');
                 $('#divMemoriaRam').css('display', 'none');
-
-
+                $('#divVelocidad').css('display', 'none')
+                $('#divTipoCapacidadDD').css('display', 'none')
                 break;
             case "9":
+                $('#divIP').removeAttr('style');
+                $('#divUsePas').css('display', 'none')
+                $('#divSSID').css('display', 'none')
+                $('#divNumeroSerie').removeAttr('style');
+                $('#divNumeroProducto').css('display', 'none')
+                $('#divSistemaOperativo').css('display', 'none')
+                $('#divProcesador').css('display', 'none')
+                $('#divProGenVel').css('display', 'none')
+                $('#divMemoriaRam').css('display', 'none')
+                $('#divVelocidad').css('display', 'none')
+                $('#divTipoCapacidadDD').css('display', 'none')
+                break;
             case "10":
                 $('#divIP').removeAttr('style');
                 $('#divUsePas').removeAttr('style');
@@ -327,24 +417,42 @@
                 $('#divProcesador').css('display', 'none')
                 $('#divProGenVel').css('display', 'none')
                 $('#divMemoriaRam').css('display', 'none')
+                $('#divTipoCapacidadDD').css('display', 'none')
                 break;
             case "11":
-                $('#divIP').css('display', 'none')
-                $('#divUsePas').css('display', 'none')
-                $('#divSSID').css('display', 'none')
-                $('#divNumeroSerie').removeAttr('style');
+            //    $('#divIP').css('display', 'none')
+            //    $('#divUsePas').css('display', 'none')
+            //    $('#divSSID').css('display', 'none')
+            //    $('#divNumeroSerie').removeAttr('style');
+            //    $('#divNumeroProducto').css('display', 'none')
+            //    $('#divSistemaOperativo').css('display', 'none')
+            //    $('#divProcesador').css('display', 'none')
+            //    $('#divProGenVel').css('display', 'none')
+            //    $('#divMemoriaRam').css('display', 'none')
+
                 $('#divNumeroProducto').css('display', 'none')
+                $('#divNumeroSerie').removeAttr('style');
+                $('#divNombreEquipo').css('display', 'none')
+                $('#divSSID').css('display', 'none')
                 $('#divSistemaOperativo').css('display', 'none')
                 $('#divProcesador').css('display', 'none')
                 $('#divProGenVel').css('display', 'none')
                 $('#divMemoriaRam').css('display', 'none')
+                $('#divVelocidad').css('display', 'none')
+                $('#divTipoCapacidadDD').css('display', 'none')
+
+
                 break;
+
+
+
 
 
             default:
             // code block
         }
     }
+
     CargarProductos()
     function CargarProductos() {
         //alert(baseUrl);
@@ -379,6 +487,13 @@
         let vPasswordIP = $("#txtPasswordIP").val();
         let vSSIDNombre = $("#txtSSIDNombre").val();
         let vSSIDPassword = $("#txtSSIDPassword").val();
+        let vNombreEquipo = $("#txtNombreEquipo").val();
+
+        let vTipoDDID = $("#cboTipoDD").val();
+        let vCapacidadDD = $("#cboCapacidadDD").val();
+        let vFechaLimiteGarantia = $("#txtFechaLimiteGarantia").val();
+
+       /* alert(vNombreEquipo);*/
         var objProducto = JSON.stringify({
             ID: (vIDProducto == -1 ? 0 : vIDProducto),
             Comentario: vDescripcion,
@@ -396,7 +511,11 @@
             Usuario: vUsuarioIP,
             Password: vPasswordIP,
             SSIDNombre: vSSIDNombre,
-            SSIDPassword: vSSIDPassword
+            SSIDPassword: vSSIDPassword,
+            NombreEquipo: vNombreEquipo,
+            TipoDDID: vTipoDDID,
+            CapacidadDD: vCapacidadDD,
+            FechaLimiteGarantia: vFechaLimiteGarantia
         });
         var dataType = 'application/json; charset=utf-8';
         $.ajax({
@@ -408,11 +527,10 @@
             success: function (exito) {
                 if (exito=="OK") {
                     swal("Good job!", "Se registró satisfactoriamente", "success")
-                    /*alert('REgistro exito');*/
+                    $("#modalRegistroProducto").modal("toggle");
                     CargarProductos();
                     limpiarControles();
-                    //$("#modalRegistroEmpresa").modal("toggle");
-                    //limpiarControles();
+
                 } else {
                     swal(exito);
                 }
@@ -488,8 +606,16 @@
                 $("#txtIP").val(objProducto.ip);
                 $("#txtUsuarioIP").val(objProducto.usuario);
                 $("#txtPasswordIP").val(objProducto.password);
-                $("#txtSSIDNombre").val(objProducto.ssidNombre);
-                $("#txtSSIDPassword").val(objProducto.ssidPassword);
+                $("#txtSSIDNombre").val(objProducto.ssidnombre);
+                $("#txtSSIDPassword").val(objProducto.ssidpassword);
+
+                $("#txtNombreEquipo").val(objProducto.nombreEquipo);
+                $("#cboTipoDD").val(objProducto.tipoDDID);
+                $("#cboCapacidadDD").val(objProducto.capacidadDD);
+
+
+                let fechaLimGar = moment(objProducto.fechaLimiteGarantia).format('YYYY-MM-DD');
+                document.getElementById("txtFechaLimiteGarantia").value = fechaLimGar;
                 modalRegistro.modal();
             }
         });

@@ -11,5 +11,6 @@ namespace DEVICE.Web.ViewModels
 
         public IEnumerable<Producto> ListadoProducto { get; set; }
         public IEnumerable<Persona> ListadoPersona { get; set; }
+        public IEnumerable<Clasificacion> ListadoClasificacion { get; set; }
     }
 }

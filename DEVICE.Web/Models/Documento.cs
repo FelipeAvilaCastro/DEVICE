@@ -13,10 +13,12 @@ namespace DEVICE.Web.Models
         }
 
         public int Id { get; set; }
-        public string Descripcion { get; set; }
-        public DateTime? FechaEntrega { get; set; }
+        public int RD { get; set; }
+        public string DocumentoEncabezado { get; set; }
+        public DateTime? FechaDocumento { get; set; }
         public int? ProveedorId { get; set; }
-        public decimal? MontoTotal { get; set; }
+        public string Observaciones { get; set; }
+        public string Status { get; set; }
 
         public virtual Proveedor Proveedor { get; set; }
         public virtual ICollection<DocumentoDetalle> DocumentoDetalle { get; set; }
